@@ -207,9 +207,16 @@ Temporary Items
 
 # PyBuilder
 
-# Jupyter Notebook
+### JupyterNotebooks ###
+# gitignore template for Jupyter Notebooks
+# website: http://jupyter.org/
+
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
 
 # IPython
+profile_default/
+ipython_config.py
 
 # pyenv
 #   For a library or package, you might want to ignore these files since the code is
@@ -257,3 +264,8 @@ Temporary Items
 
 
 # End of https://www.toptal.com/developers/gitignore/api/python,macos,visualstudiocode,django,dotenv
+
+data/음식분류/
+data/[라벨]음식분류_TRAIN/
+
+integrate_food_ingredient.xlsx
