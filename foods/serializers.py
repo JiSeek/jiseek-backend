@@ -5,4 +5,10 @@ from .models import Food
 class FoodSerializer(ModelSerializer):
     class Meta:
         model = Food
+        fields = ("id", "name")
+
+
+class FoodsSerializer(ModelSerializer):
+    class Meta:
+        model = Food
         fields = "__all__"
