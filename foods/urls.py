@@ -1,6 +1,8 @@
-from django.urls import path
+from rest_framework.routers import DefaultRouter
 from . import views
 
 app_name = "foods"
+router = DefaultRouter()
+router.register("", views.FoodViewSet)
 
-urlpatterns = [path("", views.food_search)]
+urlpatterns = router.urls
