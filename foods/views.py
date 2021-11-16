@@ -18,7 +18,6 @@ class FoodViewSet(ModelViewSet):
 
     @action(detail=False)
     def search(self, request):
-        id = request.GET.get("id", None)
         name = request.GET.get("name", None)
         size = request.GET.get("size", None)
         kcal = request.GET.get("kcal", None)
@@ -97,8 +96,6 @@ class FoodViewSet(ModelViewSet):
         }
 
         filter_kwargs = dict()
-        if id is not None:
-            filter_kwargs["id"] = id
         if name is not None:
             filter_kwargs["name__contains"] = name
         for key, val in queries.items():
