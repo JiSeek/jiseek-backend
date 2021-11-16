@@ -13,7 +13,7 @@ def food_search(request):
     protein = request.GET.get("protein", None)
     fat = request.GET.get("fat", None)
     carbohydrate = request.GET.get("carbohydrate", None)
-    Total = request.GET.get("Total", None)
+    total_sugar = request.GET.get("total_sugar", None)
     dietary_fiber = request.GET.get("dietary_fiber", None)
     Ca = request.GET.get("Ca", None)
     Fe = request.GET.get("Fe", None)
@@ -50,7 +50,7 @@ def food_search(request):
         "protein": protein,
         "fat": fat,
         "carbohydrate": carbohydrate,
-        "Total": Total,
+        "total_sugar": total_sugar,
         "dietary_fiber": dietary_fiber,
         "Ca": Ca,
         "Fe": Fe,
