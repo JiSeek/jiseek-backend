@@ -4,9 +4,9 @@ from core.models import CoreModel
 
 class Board(CoreModel):
     content = models.TextField()
-    # user = models.ForeignKey(
-    #     "users.User", on_delete=models.CASCADE, related_name="boards"
-    # )
+    user = models.ForeignKey(
+        "users.User", on_delete=models.CASCADE, related_name="boards"
+    )
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
