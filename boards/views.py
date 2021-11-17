@@ -1,7 +1,9 @@
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from boards.models import Board
 from .serializers import BoardSerializer
+from .permissions import IsSelfOrReadOnly
 
 
 class BoardPagination(PageNumberPagination):
@@ -16,18 +18,13 @@ class BoardsView(ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 
-# class BoardView(APIView):
-#     def get_board(self, pk):
-#         try:
-#             board = Board.objects.get(pk=pk)
-#             return board
-#         except Board.DoesNotExist:
-#             return None
+class BoardView(RetrieveUpdateDestroyAPIView):
+    queryset = Board.objects.all()
+    serializer_class = BoardSerializer
 
-#     def get(self, request, pk):
-#         board = self.get_board(pk)
-#         if board:
-#             serializer = BoardSerializer(board)
-#             return Response(serializer.data)
-#         else:
-#             return Response(status=status.HTTP_404_NOT_FOUND)
+    def get_permissions(self):
+        if self.request.method == "GET":
+            permission_classes = [IsAuthenticatedOrReadOnly]
+        else:
+            permission_classes = [IsSelfOrReadOnly]
+        return [permission() for permission in permission_classes]
