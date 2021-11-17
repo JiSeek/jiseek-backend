@@ -8,6 +8,10 @@ django = "*"
 djangorestframework = "*"
 pytz = "*"
 django-environ = "*"
+pillow = "*"
+dj-rest-auth = "*"
+django-allauth = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 flake8 = "*"
