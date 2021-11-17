@@ -1,0 +1,14 @@
+from django.urls import path, include
+from django.conf.urls.static import static
+from . import views
+from config import settings
+
+
+urlpatterns = [
+    path("", include("dj_rest_auth.urls")),
+    path("register/", include("dj_rest_auth.registration.urls")),
+]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
