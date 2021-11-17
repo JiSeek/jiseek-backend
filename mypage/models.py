@@ -10,31 +10,22 @@ User = get_user_model()
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to=upload_image, editable=True, null=True)
+    image = models.ImageField(
+        upload_to=upload_image, editable=True, blank=True, null=True
+    )
     nickname = models.CharField(max_length=30, unique=True, null=True)
 
     def __str__(self):
         return f"{self.user.username} profile"
 
-    # Override the save method of the model
-    def save(self):
-        super().save()
+    # # Override the save method of the model
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
 
-        img = Image.open(self.image.path)  # Open image
+    #     img = Image.open(self.image.path)  # Open image
 
-        # resize image
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            img.thumbnail(output_size)  # Resize image
-            img.save(self.image.path)  # Save it again and override the larger image
-
-
-# @receiver(post_save, sender=User)
-# def create_user_profile(sender, instance, created, **kwargs):
-#     if created:
-#         Profile.objects.create(user=instance, user_pk=instance.id)
-
-
-# @receiver(post_save, sender=User)
-# def save_user_profile(sender, instance, **kwargs):
-#     instance.profile.save()
+    #     # resize image
+    #     if img.height > 300 or img.width > 300:
+    #         output_size = (300, 300)
+    #         img.thumbnail(output_size)  # Resize image
+    #         img.save(self.image.path)  # Save it again and override the larger image
