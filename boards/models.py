@@ -21,3 +21,13 @@ class Photo(CoreModel):
     board = models.OneToOneField(
         "boards.Board", verbose_name="board_photo", on_delete=models.CASCADE
     )
+
+
+class Comment(CoreModel):
+    comment = models.CharField(max_length=255)
+    board = models.ForeignKey(
+        "Board", related_name="comments", on_delete=models.CASCADE
+    )
+    user = models.ForeignKey(
+        "users.User", related_name="comments", on_delete=models.CASCADE
+    )
