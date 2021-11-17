@@ -20,3 +20,8 @@ class CustomAccountAdapter(DefaultAccountAdapter):
 
         user.save()
         return user
+
+    # email verification redirected to the frontend part
+    # 해당 url을 프론트엔드로 보내면 프론트는 url의 key를 받아서 백엔드에 'post' 메소드로 보내야 함
+    # def get_email_confirmation_url(self, request, emailconfirmation):
+    #     return FRONTEND_URL +  'verify/{}'.format(emailconfirmation.key)
