@@ -19,5 +19,6 @@ class CustomUserManager(BaseUserManager):
     def create_superuser(self, **kwargs):
         new_superuser = self.create_user(**kwargs)
         new_superuser.is_admin = True
+        new_superuser.is_staff = True
         new_superuser.save(using=self._db)
         return new_superuser
