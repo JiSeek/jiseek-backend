@@ -1,8 +1,8 @@
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from boards.models import Board
-from .serializers import BoardSerializer
+from boards.models import Board, Comment
+from .serializers import BoardSerializer, CommentSerializer
 from .permissions import IsSelfOrReadOnly
 
 
@@ -28,3 +28,11 @@ class BoardView(RetrieveUpdateDestroyAPIView):
         else:
             permission_classes = [IsSelfOrReadOnly]
         return [permission() for permission in permission_classes]
+
+
+class CommentView(ListCreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
