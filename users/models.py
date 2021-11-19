@@ -6,8 +6,7 @@ from rest_framework.validators import UniqueValidator
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
-    name = models.CharField(max_length=30)
-    nickname = models.CharField(
+    name = models.CharField(
         max_length=20,
         unique=True,
         error_messages={

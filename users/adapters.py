@@ -13,14 +13,11 @@ class CustomAccountAdapter(DefaultAccountAdapter):
 
         name = data.get("name")
         is_korean = data.get("is_korean")
-        nickname = data.get("nickname")
 
         if name:
             user.name = name
         if is_korean:
             user.is_korean = is_korean
-        if nickname:
-            user.nickname = nickname
 
         user.save()
 
