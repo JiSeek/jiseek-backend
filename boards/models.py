@@ -7,6 +7,9 @@ class Board(CoreModel):
     user = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, related_name="boards"
     )
+    comment = models.ForeignKey(
+        "Comment", on_delete=models.CASCADE, related_name="boards", null=True
+    )
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -31,3 +34,6 @@ class Comment(CoreModel):
     user = models.ForeignKey(
         "users.User", related_name="comments", on_delete=models.CASCADE
     )
+
+    class Meta:
+        ordering = ["-modified"]
