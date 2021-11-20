@@ -10,7 +10,7 @@ class CommentSerializer(ModelSerializer):
 
 
 class BoardSerializer(ModelSerializer):
-    comment = CommentSerializer(many=True)
+    comment = CommentSerializer(read_only=True)
 
     class Meta:
         model = Board
