@@ -34,11 +34,16 @@ class BoardView(RetrieveUpdateDestroyAPIView):
 
 
 class CommentsView(ListCreateAPIView):
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
+    def get_queryset(self):
+        pk = self.kwargs["pk"]
+        comments = Comment.objects.filter(board__id=pk)
+        return comments
+
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        pk = self.kwargs["pk"]
+        serializer.save(user=self.request.user, board=Board.objects.get(pk=pk))
 
 
 class CommentView(APIView):
@@ -54,8 +59,23 @@ class CommentView(APIView):
 
     def get(self, request, board_pk, comment_pk):
         comment = self.get_comment(board_pk, comment_pk)
-        if comment is not None:
+        if comment:
             serializer = CommentSerializer(comment)
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, board_pk, comment_pk):
+        comment = self.get_comment(board_pk, comment_pk)
+
+        serializer = CommentSerializer(data=request.data, instance=comment)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response({"message": "Comment has been updated!"})
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, board_pk, comment_pk):
+        comment = self.get_comment(board_pk, comment_pk)
+        comment.delete()
+        return Response({"message": "Comment has been deleted!"})
