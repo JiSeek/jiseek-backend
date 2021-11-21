@@ -1,11 +1,7 @@
 {
     "_meta": {
         "hash": {
-<<<<<<< HEAD
-            "sha256": "6fae6d835e2f85368696eaac4af06affea493ebfc8cdfe97b9c06b07400a7045"
-=======
             "sha256": "7b10c4eff7f0f78d88a7adcb99481c8807b28849d5b6a6b4052a37fde264dac4"
->>>>>>> 63337ee (feat: Create Board model)
         },
         "pipfile-spec": 6,
         "requires": {

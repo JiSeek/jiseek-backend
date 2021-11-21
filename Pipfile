@@ -6,12 +6,9 @@ name = "pypi"
 [packages]
 django = "*"
 djangorestframework = "*"
-<<<<<<< HEAD
 pytz = "*"
 django-environ = "*"
-=======
 pillow = "*"
->>>>>>> 63337ee (feat: Create Board model)
 
 [dev-packages]
 flake8 = "*"
