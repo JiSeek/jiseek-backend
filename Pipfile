@@ -12,6 +12,11 @@ pillow = "*"
 dj-rest-auth = "*"
 django-allauth = "*"
 djangorestframework-simplejwt = "*"
+django-extensions = "*"
+werkzeug = "*"
+pyopenssl = "*"
+pyjwt = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 flake8 = "*"
