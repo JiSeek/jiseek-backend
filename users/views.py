@@ -44,7 +44,7 @@ class GoogleLoginView(View):
             new_user_info = User(  # 처음으로 소셜로그인을 했을 경우 회원 정보를 저장(email이 없을 수도 있다 하여, 있으면 저장하고, 없으면 None으로 표기)
                 social_login_id=user["sub"],
                 name=user["name"],
-                social_platform=google,
+                social_platform="google",
                 email=user.get("email", None),
                 last_login=timezone.now(),
             )
@@ -107,7 +107,6 @@ class KakaoLoginView(View):  # 카카오 로그인
             encoded_jwt = jwt.encode(
                 {"id": new_user_info.id}, SECRET_KEY, algorithm="HS256"
             )  # jwt토큰 발행
-            none_member_type = 1
             return JsonResponse(
                 {
                     "access_token": encoded_jwt,
