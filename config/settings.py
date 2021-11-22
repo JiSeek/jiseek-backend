@@ -203,9 +203,9 @@ ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 
 # Email 설정
 if DEBUG:
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = "smtp.gmail.com"
