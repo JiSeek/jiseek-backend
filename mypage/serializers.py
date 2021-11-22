@@ -3,6 +3,10 @@ from .models import Profile
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    # nickname = serializers.CharField(source="profile.nickname")
+
     class Meta:
         model = Profile
-        fields = ["user_id", "nickname", "image"]
+        fields = [
+            "nickname",
+        ]
