@@ -1,0 +1,19 @@
+{
+    "dev": {
+        "aws_region": "ap-northeast-2",
+        "django_settings": "config.settings",
+        "profile_name": "jiseek_test",
+        "project_name": "jiseek",
+        "runtime": "python3.9",
+        "s3_bucket": "zappa-jiseek-test",
+        "vpc_config": {
+            "SubnetIds": [
+                "subnet-855398da",
+                "subnet-b0397fcb"
+            ],
+            "SecurityGroupIds": [
+                "sg-46888f37"
+            ]
+        }
+    }
+}
