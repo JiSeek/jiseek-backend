@@ -27,9 +27,14 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "ap-northeast-2.amazonaws.com",
+]
 
 
 # Application definition
@@ -245,6 +250,6 @@ if DEBUG:
     CORS_ORIGIN_CREDENTIALS = True
 else:
     CORS_ORIGIN_WHITELIST = [
-        "localhost:8000",
+        "http://localhost:8000",
         # 리액트 배포 서버
     ]
