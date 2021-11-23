@@ -54,7 +54,7 @@ class ProfileAPI(generics.RetrieveUpdateAPIView):
         return self.request.user
 
 
-@api_view(["GET"])
+@api_view(["PUT"])
 @permission_classes([IsAuthenticated])
 def like_board(request, pk):
     user_id = request.user.id
@@ -72,7 +72,7 @@ def like_board(request, pk):
         return Response("Unsuccessful", status.HTTP_404_NOT_FOUND)
 
 
-@api_view(["GET"])
+@api_view(["PUT"])
 @permission_classes([IsAuthenticated])
 def like_food(request, pk):
     user_id = request.user.id
