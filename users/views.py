@@ -1,11 +1,31 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.views import View
 from django.http import JsonResponse
 from django.utils import timezone
+from dj_rest_auth.views import LoginView
 import jwt, requests, datetime
+from datetime import timedelta
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenRefreshView
+from .serializers import CustomTokenRefreshSerializer
 
 User = get_user_model()
 SECRET_KEY = "secret_key"
+
+
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+    return str(refresh), str(refresh.access_token)
+
+
+class CustomLoginView(LoginView):
+    def get_response(self):
+        orginal_response = super().get_response()
+        expires_at = timezone.now() + timedelta(hours=2)
+        added_data = {"expires_at": int(round(expires_at.timestamp()))}
+        orginal_response.data.update(added_data)
+        return orginal_response
 
 
 class GoogleLoginView(View):
@@ -26,17 +46,21 @@ class GoogleLoginView(View):
             user_info = User.objects.get(social_login_id=user["sub"])  # 가입된 데이터를 변수에 저장
             user_info.last_login = timezone.now()
             user_info.save()
-            encoded_jwt = jwt.encode(
-                {"id": user["sub"]}, SECRET_KEY, algorithm="HS256"
-            )  # jwt토큰 발행
-            none_member_type = 1
-
+            refresh_token, access_token = get_tokens_for_user(user_info)
+            expires_at = (
+                timezone.now()
+                + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"]
+            )
             return JsonResponse(
-                {  # 프론트엔드에게 access token과 필요한 데이터 전달
-                    "access_token": encoded_jwt,
-                    "user_name": user["name"],
-                    "user_type": none_member_type,
-                    "user_pk": user_info.id,
+                {  # jwt토큰, 이름, 타입 프론트엔드에 전달
+                    "access_token": access_token,
+                    "refresh_token": refresh_token,
+                    "user": {
+                        "email": user_info.email,
+                        "name": user_info.name,
+                        "pk": user_info.id,
+                    },
+                    "expires_at": int(round(expires_at.timestamp())),
                 },
                 status=200,
             )
@@ -49,16 +73,18 @@ class GoogleLoginView(View):
                 last_login=timezone.now(),
             )
             new_user_info.save()  # DB에 저장
-            encoded_jwt = jwt.encode(
-                {"id": new_user_info.id}, SECRET_KEY, algorithm="HS256"
-            )  # jwt토큰 발행
-
+            refresh_token, access_token = get_tokens_for_user(user_info)
             return JsonResponse(
-                {  # DB에 저장된 회원의 정보를 access token과 같이 프론트엔드에 전달
-                    "access_token": encoded_jwt,
-                    "user_name": new_user_info.name,
-                    "user_type": none_member_type,
-                    "user_pk": new_user_info.id,
+                {  # jwt토큰, 이름, 타입 프론트엔드에 전달
+                    "access_token": access_token,
+                    "refresh_token": refresh_token,
+                    "user": {
+                        "email": new_user_info.email,
+                        "name": new_user_info.name,
+                        "pk": new_user_info.id,
+                    },
+                    "expires_at": timezone.now()
+                    + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
                 },
                 status=200,
             )
@@ -75,7 +101,6 @@ class KakaoLoginView(View):  # 카카오 로그인
             "GET", url, headers=headers
         )  # API를 요청하여 회원의 정보를 response에 저장
         user = response.json()
-        print("user", user)
 
         if User.objects.filter(
             social_login_id=user["id"], social_platform="kakao"
@@ -83,15 +108,21 @@ class KakaoLoginView(View):  # 카카오 로그인
             user_info = User.objects.get(social_login_id=user["id"])
             user_info.last_login = timezone.now()
             user_info.save()
-            encoded_jwt = jwt.encode(
-                {"id": user_info.id}, SECRET_KEY, algorithm="HS256"
-            )  # jwt토큰 발행
-
+            refresh_token, access_token = get_tokens_for_user(user_info)
+            expires_at = (
+                timezone.now()
+                + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"]
+            )
             return JsonResponse(
                 {  # jwt토큰, 이름, 타입 프론트엔드에 전달
-                    "access_token": encoded_jwt,
-                    "user_name": user_info.name,
-                    "user_pk": user_info.id,
+                    "access_token": access_token,
+                    "refresh_token": refresh_token,
+                    "user": {
+                        "email": user_info.email,
+                        "name": user_info.name,
+                        "pk": user_info.id,
+                    },
+                    "expires_at": int(round(expires_at.timestamp())),
                 },
                 status=200,
             )
@@ -104,14 +135,22 @@ class KakaoLoginView(View):  # 카카오 로그인
                 last_login=timezone.now(),
             )
             new_user_info.save()
-            encoded_jwt = jwt.encode(
-                {"id": new_user_info.id}, SECRET_KEY, algorithm="HS256"
-            )  # jwt토큰 발행
+            # access_token = jwt.encode(
+            #     {"id": new_user_info.id}, SECRET_KEY, algorithm="HS256"
+            # )  # jwt토큰 발행
+            access_token, refresh_token = get_tokens_for_user(user_info)
+            refresh_token, access_token = get_tokens_for_user(user_info)
             return JsonResponse(
-                {
-                    "access_token": encoded_jwt,
-                    "user_name": new_user_info.name,
-                    "user_pk": new_user_info.id,
+                {  # jwt토큰, 이름, 타입 프론트엔드에 전달
+                    "access_token": access_token,
+                    "refresh_token": refresh_token,
+                    "user": {
+                        "email": new_user_info.email,
+                        "name": new_user_info.name,
+                        "pk": new_user_info.id,
+                    },
+                    "expires_at": timezone.now()
+                    + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
                 },
                 status=200,
             )
@@ -133,15 +172,18 @@ class NaverLoginView(View):  # 네이버 로그인
             user_info = User.objects.get(social_login_id=user["id"])
             user_info.last_login = timezone.now()
             user_info.save()
-            encoded_jwt = jwt.encode(
-                {"id": user_info.id}, SECRET_KEY, algorithm="HS256"
-            )  # jwt토큰 발행
-
+            refresh_token, access_token = get_tokens_for_user(user_info)
             return JsonResponse(
                 {  # jwt토큰, 이름, 타입 프론트엔드에 전달
-                    "access_token": encoded_jwt,
-                    "user_name": user_info.nickname,
-                    "user_pk": user_info.id,
+                    "access_token": access_token,
+                    "refresh_token": refresh_token,
+                    "user": {
+                        "email": user_info.email,
+                        "name": user_info.name,
+                        "pk": user_info.id,
+                    },
+                    "expires_at": timezone.now()
+                    + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
                 },
                 status=200,
             )
@@ -154,14 +196,22 @@ class NaverLoginView(View):  # 네이버 로그인
                 last_login=timezone.now(),
             )
             new_user_info.save()
-            encoded_jwt = jwt.encode(
-                {"id": new_user_info.id}, SECRET_KEY, algorithm="HS256"
-            )  # jwt토큰 발행
+            refresh_token, access_token = get_tokens_for_user(user_info)
             return JsonResponse(
-                {
-                    "access_token": encoded_jwt,
-                    "user_name": new_user_info.name,
-                    "user_pk": new_user_info.id,
+                {  # jwt토큰, 이름, 타입 프론트엔드에 전달
+                    "access_token": access_token,
+                    "refresh_token": refresh_token,
+                    "user": {
+                        "email": new_user_info.email,
+                        "name": new_user_info.name,
+                        "pk": new_user_info.id,
+                    },
+                    "expires_at": timezone.now()
+                    + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
                 },
                 status=200,
             )
+
+
+class CustomTokenRefreshView(TokenRefreshView):
+    serializer_class = CustomTokenRefreshSerializer
