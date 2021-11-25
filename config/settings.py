@@ -154,7 +154,9 @@ AUTH_USER_MODEL = "users.User"
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Seoul"
+
+USE_TZ = False
 
 USE_I18N = True
 
@@ -200,6 +202,7 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+OLD_PASSWORD_FIELD_ENABLED = True
 
 # Email 설정
 if DEBUG:
@@ -234,17 +237,19 @@ from datetime import timedelta
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=2),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-    "ROTATE_REFRESH_TOKENS": False,
+    "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
 }
 
 
 # cors 설정
-CORS_ORIGIN_ALLOW_ALL = False
 if DEBUG:
-    CORS_ORIGIN_CREDENTIALS = True
+    CORS_ORIGIN_ALLOW_ALL = True
 else:
-    CORS_ORIGIN_WHITELIST = [
-        "localhost:8000",
-        # 리액트 배포 서버
+    CORS_ALLOWED_ORIGINS = [
+        # 허용할 Origin 추가
+        "https://example.com",
+        "https://sub.example.com",
+        "http://localhost:8080",
+        "http://127.0.0.1:3000",
     ]
