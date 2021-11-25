@@ -9,7 +9,9 @@
         "vpc_config": {
             "SubnetIds": [
                 "subnet-855398da",
-                "subnet-b0397fcb"
+                "subnet-b0397fcb",
+                "subnet-e8891c83",
+                "subnet-f8ed14b7"
             ],
             "SecurityGroupIds": [
                 "sg-46888f37"

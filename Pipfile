@@ -18,8 +18,9 @@ pyopenssl = "*"
 pyjwt = "*"
 django-cors-headers = "*"
 zappa = "*"
-aws-psycopg2 = "*"
-psycopg2 = "==2.8.6"
+django-s3-storage = "*"
+django-dotenv = "*"
+psycopg2 = "*"
 
 [dev-packages]
 flake8 = "*"
