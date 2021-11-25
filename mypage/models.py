@@ -23,7 +23,7 @@ class Profile(models.Model):
     )
 
     def __str__(self):
-        return f"{self.user.username} profile"
+        return f"{self.user.name} profile"
 
     # # Override the save method of the model
     # def save(self, *args, **kwargs):
