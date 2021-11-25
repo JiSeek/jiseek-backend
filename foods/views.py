@@ -3,10 +3,12 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.pagination import PageNumberPagination
 from foods.models import Food
 from foods.serializers import FoodSerializer, FoodsSerializer
+from rest_framework.permissions import AllowAny
 
 
 class FoodViewSet(ReadOnlyModelViewSet):
     queryset = Food.objects.all()
+    permission_classes = [AllowAny]
 
     def get_serializer_class(self):
         if self.action == "retrieve":

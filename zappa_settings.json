@@ -5,7 +5,7 @@
         "profile_name": "jiseek_test",
         "project_name": "jiseek",
         "runtime": "python3.9",
-        "s3_bucket": "zappa-jiseek-test",
+        "s3_bucket": "reviewkingwordcloud",
         "vpc_config": {
             "SubnetIds": [
                 "subnet-855398da",

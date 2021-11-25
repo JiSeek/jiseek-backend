@@ -18,8 +18,8 @@ pyopenssl = "*"
 pyjwt = "*"
 django-cors-headers = "*"
 zappa = "*"
-psycopg2 = "==2.8"
 aws-psycopg2 = "*"
+psycopg2 = "==2.8.6"
 
 [dev-packages]
 flake8 = "*"
