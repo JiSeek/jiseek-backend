@@ -1,8 +1,10 @@
 from django.utils import timezone
 from django.conf import settings
+from django.forms.fields import ImageField
 from rest_framework import serializers
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from django.contrib.auth import get_user_model
+from rest_framework.serializers import ModelSerializer
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.views import TokenRefreshView
@@ -11,6 +13,7 @@ from rest_framework_simplejwt.settings import APISettings
 from rest_framework_simplejwt.settings import USER_SETTINGS
 from rest_framework_simplejwt.settings import DEFAULTS
 from rest_framework_simplejwt.settings import IMPORT_STRINGS
+from mypage.serializers import ProfileSerializer
 
 User = get_user_model()
 
@@ -33,7 +36,6 @@ class CustomRegisterSerializer(RegisterSerializer):
         data["name"] = self.validated_data.get("name", "")
 
         return data
-
 
 
 api_settings = APISettings(USER_SETTINGS, DEFAULTS, IMPORT_STRINGS)
@@ -71,3 +73,20 @@ class CustomTokenRefreshSerializer(TokenRefreshSerializer):
         data["expires_at"] = int(round(expires_at.timestamp()))
 
         return data
+
+
+class UserInfoRetrieveSerializer(ModelSerializer):
+    image = serializers.ImageField(source="profile.image", read_only=True)
+
+    class Meta:
+        model = User
+        fields = ["pk", "email", "name", "image"]
+
+
+class UserInfoUpdateSerializer(ModelSerializer):
+    email = serializers.EmailField(read_only=True)
+    image = serializers.ImageField(source="profile.image")
+
+    class Meta:
+        model = User
+        fields = ["pk", "email", "name", "image"]

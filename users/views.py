@@ -6,9 +6,21 @@ from django.utils import timezone
 from dj_rest_auth.views import LoginView
 import jwt, requests, datetime
 from datetime import timedelta
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.token_blacklist.models import (
+    BlacklistedToken,
+    OutstandingToken,
+)
 from rest_framework_simplejwt.views import TokenRefreshView
-from .serializers import CustomTokenRefreshSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status, generics
+from .serializers import (
+    CustomTokenRefreshSerializer,
+    UserInfoRetrieveSerializer,
+    UserInfoUpdateSerializer,
+)
 
 User = get_user_model()
 SECRET_KEY = "secret_key"
@@ -17,6 +29,20 @@ SECRET_KEY = "secret_key"
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
     return str(refresh), str(refresh.access_token)
+
+
+class LogoutView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class CustomLoginView(LoginView):
@@ -215,3 +241,19 @@ class NaverLoginView(View):  # 네이버 로그인
 
 class CustomTokenRefreshView(TokenRefreshView):
     serializer_class = CustomTokenRefreshSerializer
+
+
+class UserInfoView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserInfoRetrieveSerializer
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def get_object(self):
+        return self.request.user
+
+    def get_serializer_class(self):
+        serializer_class = self.serializer_class
+        if self.request.method == "PUT" or self.request.method == "PATCH":
+            serializer_class = UserInfoUpdateSerializer
+        return serializer_class

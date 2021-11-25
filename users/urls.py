@@ -9,6 +9,8 @@ from config import settings
 urlpatterns = [
     path("", include("dj_rest_auth.urls")),
     path("register/", include("dj_rest_auth.registration.urls")),
+    path("logout-all/", views.LogoutView.as_view()),
+    path("info/", views.UserInfoView.as_view()),
     path("access-token/refresh/", views.CustomTokenRefreshView.as_view()),
     path("custom/login/", views.CustomLoginView.as_view()),
     path("login/google/", views.GoogleLoginView.as_view()),
