@@ -8,7 +8,6 @@ from dj_rest_auth.jwt_auth import JWTCookieAuthentication  # will be removed
 from .serializers import (
     BoardFavsSerializer,
     FoodFavsSerializer,
-    UpdateUserSerializer,
 )
 from boards.serializers import BoardSerializer
 from .models import Profile
