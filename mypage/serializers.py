@@ -3,24 +3,22 @@ from rest_framework import serializers
 from boards.serializers import BoardSerializer
 from foods.serializers import FoodSerializer
 from .models import Profile
+from boards.models import Board
+from foods.models import Food
 
 User = get_user_model()
 
 
 class BoardFavsSerializer(serializers.ModelSerializer):
-    boards = BoardSerializer(source="board_favs", read_only=True, many=True)
-
     class Meta:
-        model = Profile
-        fields = ["boards"]
+        model = Board
+        fields = ["pk", "content", "created"]
 
 
 class FoodFavsSerializer(serializers.ModelSerializer):
-    foods = FoodSerializer(source="food_favs", read_only=True, many=True)
-
     class Meta:
-        model = Profile
-        fields = ["foods"]
+        model = Food
+        fields = ["pk", "name"]
 
 
 class ProfileSerializer(serializers.ModelSerializer):
