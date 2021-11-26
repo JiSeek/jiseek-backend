@@ -21,12 +21,6 @@ class CustomRegisterSerializer(RegisterSerializer):
     is_korean = serializers.BooleanField()
     name = serializers.CharField(
         max_length=20,
-        validators=[
-            UniqueValidator(
-                User.objects.all(),
-                message="A user with this name already exists.",
-            )
-        ],
     )
 
     def get_cleaned_data(self):
