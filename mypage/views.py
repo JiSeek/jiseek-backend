@@ -58,20 +58,6 @@ class FoodFavsAPI(generics.ListAPIView):
         return Food.objects.filter(id__in=food_ids).all()
 
 
-class ProfileAPI(generics.RetrieveUpdateAPIView):
-    queryset = Profile.objects.all()
-    serializer_class = UpdateUserSerializer
-    authentication_classes = [
-        JWTCookieAuthentication,
-    ]
-    permission_classes = [
-        IsAuthenticated,
-    ]
-
-    def get_object(self):
-        return self.request.user
-
-
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
 def like_board(request, pk):
