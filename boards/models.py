@@ -8,6 +8,7 @@ class Board(CoreModel):
         "users.User", on_delete=models.CASCADE, related_name="boards"
     )
     photo = models.ImageField(null=True)
+    count = models.ManyToManyField("users.User", related_name="boards_count")
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

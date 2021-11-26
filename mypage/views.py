@@ -58,10 +58,16 @@ class ProfileAPI(generics.RetrieveUpdateAPIView):
 @permission_classes([IsAuthenticated])
 def like_board(request, pk):
     user_id = request.user.id
+    user = User.objects.get(pk=user_id)
     profile = Profile.objects.get(user_id=user_id)
     board = Board.objects.get(pk=pk)
 
     if profile and board:
+        print(user)
+        if user_id in board.count.all():
+            board.count.remove(user)
+        else:
+            board.count.add(user)
         if board in profile.board_favs.all():
             profile.board_favs.remove(board)
             return Response("Removed")

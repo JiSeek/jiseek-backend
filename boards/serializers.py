@@ -10,9 +10,9 @@ class CommentSerializer(ModelSerializer):
 
 
 class BoardSerializer(ModelSerializer):
-    comment = CommentSerializer(read_only=True)
+    comment = CommentSerializer(read_only=True, many=True)
 
     class Meta:
         model = Board
         fields = "__all__"
-        read_only_fields = ("id", "created", "modified", "user", "comment")
+        read_only_fields = ("id", "created", "modified", "user", "comment", "count")
