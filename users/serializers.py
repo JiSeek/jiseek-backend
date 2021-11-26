@@ -13,7 +13,6 @@ from rest_framework_simplejwt.settings import APISettings
 from rest_framework_simplejwt.settings import USER_SETTINGS
 from rest_framework_simplejwt.settings import DEFAULTS
 from rest_framework_simplejwt.settings import IMPORT_STRINGS
-from mypage.serializers import ProfileSerializer
 
 User = get_user_model()
 
