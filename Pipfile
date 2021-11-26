@@ -17,6 +17,7 @@ werkzeug = "*"
 pyopenssl = "*"
 pyjwt = "*"
 django-cors-headers = "*"
+django-dotenv = "*"
 
 [dev-packages]
 flake8 = "*"

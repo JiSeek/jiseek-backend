@@ -11,13 +11,11 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 import os
-import environ
+from datetime import timedelta
 
-env = environ.Env(DEBUG=(bool, False))
+env = os.environ.get
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 
 # Quick-start development settings - unsuitable for production
@@ -27,9 +25,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -229,7 +227,6 @@ AUTHENTICATION_BACKENDS = (
 # jwt 설정
 REST_USE_JWT = True
 
-from datetime import timedelta
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=2),
@@ -245,6 +242,6 @@ if DEBUG:
     CORS_ORIGIN_CREDENTIALS = True
 else:
     CORS_ORIGIN_WHITELIST = [
-        "localhost:8000",
+        "http://localhost:8000",
         # 리액트 배포 서버
     ]

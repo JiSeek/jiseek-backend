@@ -1,9 +1,7 @@
 from django.urls import path, re_path, include
-from django.conf.urls.static import static
 from dj_rest_auth.registration.views import VerifyEmailView
 
 from . import views
-from config import settings
 
 
 urlpatterns = [

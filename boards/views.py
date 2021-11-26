@@ -10,12 +10,13 @@ from .permissions import IsSelfOrReadOnly
 
 
 class BoardPagination(PageNumberPagination):
-    page_size = 9
+    page_size = 24
 
 
 class BoardsView(ListCreateAPIView):
     queryset = Board.objects.all()
     serializer_class = BoardSerializer
+    pagination_class = BoardPagination
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
