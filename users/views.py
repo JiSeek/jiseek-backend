@@ -4,9 +4,11 @@ from django.views import View
 from django.http import JsonResponse
 from django.utils import timezone
 from dj_rest_auth.views import LoginView
+from dj_rest_auth.registration.views import VerifyEmailView
+
 import jwt, requests, datetime
 from datetime import timedelta
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.token_blacklist.models import (
     BlacklistedToken,
@@ -257,3 +259,29 @@ class UserInfoView(generics.RetrieveUpdateAPIView):
         if self.request.method == "PUT" or self.request.method == "PATCH":
             serializer_class = UserInfoUpdateSerializer
         return serializer_class
+
+
+class CustomVerifyEmailView(VerifyEmailView):
+    # ...
+
+    def post(self, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.kwargs["key"] = serializer.validated_data["key"]
+        confirmation = self.get_object()
+        confirmation.confirm(self.request)
+        login_view = LoginView()
+        login_view.user = confirmation.email_address.user
+
+        if getattr(settings, "REST_USE_JWT", False):
+            self.refresh_token, self.access_token = get_tokens_for_user(self.user)
+        else:
+            self.token = create_token(
+                self.token_model,
+                self.user,
+                self.serializer,
+            )
+
+        if getattr(settings, "REST_SESSION_LOGIN", True):
+            self.process_login()
+        return login_view.get_response()
