@@ -63,11 +63,14 @@ def like_board(request, pk):
     board = Board.objects.get(pk=pk)
 
     if profile and board:
-        print(user)
-        if user_id in board.count.all():
-            board.count.remove(user)
+        if user in board.like_users.all():
+            board.like_users.remove(user)
+            board.count -= 1
+            board.save()
         else:
-            board.count.add(user)
+            board.like_users.add(user)
+            board.count += 1
+            board.save()
         if board in profile.board_favs.all():
             profile.board_favs.remove(board)
             return Response("Removed")

@@ -13,6 +13,7 @@ class BoardFavsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ["boards"]
+        ordering = ["created"]
 
 
 class FoodFavsSerializer(serializers.ModelSerializer):

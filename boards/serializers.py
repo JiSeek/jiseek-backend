@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from .models import Board, Comment
 
 
@@ -15,4 +15,12 @@ class BoardSerializer(ModelSerializer):
     class Meta:
         model = Board
         fields = "__all__"
-        read_only_fields = ("id", "created", "modified", "user", "comment", "count")
+        read_only_fields = (
+            "id",
+            "created",
+            "modified",
+            "user",
+            "comment",
+            "like_users",
+            "count",
+        )
