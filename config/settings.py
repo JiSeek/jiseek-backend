@@ -202,7 +202,10 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+LOGIN_ON_EMAIL_CONFIRMATION = True
 OLD_PASSWORD_FIELD_ENABLED = True
+
 
 # Email 설정
 if DEBUG:
@@ -218,8 +221,7 @@ EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True  # 유저가 받은 링크를 클릭하면 회원가입 완료되게끔
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "지식(Jiseek) 이메일 인증: "  # 이메일에 자동으로 표시되는 사이트 정보
-# REDIRECT_PAGE="프론트엔드 서버 주소"
-
+URL_FRONT = "http://127.0.0.1:8000/"
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
