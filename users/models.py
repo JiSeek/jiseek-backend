@@ -8,13 +8,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         max_length=255, unique=True, null=True
     )  # 카카오는 이메일이 없을 수 있음
-    # name = models.CharField(
-    #     max_length=20,
-    #     unique=True,
-    #     error_messages={
-    #         "unique": "A user with this phone number already exists.",
-    #     },
-    # )
     name = models.CharField(
         max_length=20,
     )

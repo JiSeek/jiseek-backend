@@ -8,7 +8,6 @@ from dj_rest_auth.jwt_auth import JWTCookieAuthentication  # will be removed
 from .serializers import (
     BoardFavsSerializer,
     FoodFavsSerializer,
-    UpdateUserSerializer,
 )
 from boards.serializers import BoardSerializer
 from .models import Profile
@@ -19,7 +18,6 @@ User = get_user_model()
 
 
 class BoardFavsAPI(generics.ListAPIView):
-    queryset = Profile.objects.all()
     serializer_class = BoardFavsSerializer
     authentication_classes = [
         JWTCookieAuthentication,
@@ -28,9 +26,18 @@ class BoardFavsAPI(generics.ListAPIView):
         IsAuthenticated,
     ]
 
+    def get_queryset(self):
+        user = self.request.user
+        profile_id = Profile.objects.get(user=user).id
+        liked_boards = Profile.board_favs.through.objects.filter(
+            profile_id=profile_id
+        ).all()
+        board_ids = [liked_board.id for liked_board in liked_boards]
+
+        return Board.objects.filter(id__in=board_ids).all()
+
 
 class FoodFavsAPI(generics.ListAPIView):
-    queryset = Profile.objects.all()
     serializer_class = FoodFavsSerializer
     authentication_classes = [
         JWTCookieAuthentication,
@@ -39,19 +46,15 @@ class FoodFavsAPI(generics.ListAPIView):
         IsAuthenticated,
     ]
 
+    def get_queryset(self):
+        user = self.request.user
+        profile_id = Profile.objects.get(user=user).id
+        liked_foods = Profile.food_favs.through.objects.filter(
+            profile_id=profile_id
+        ).all()
+        food_ids = [liked_food.id for liked_food in liked_foods]
 
-class ProfileAPI(generics.RetrieveUpdateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UpdateUserSerializer
-    authentication_classes = [
-        JWTCookieAuthentication,
-    ]
-    permission_classes = [
-        IsAuthenticated,
-    ]
-
-    def get_object(self):
-        return self.request.user
+        return Food.objects.filter(id__in=food_ids).all()
 
 
 @api_view(["PUT"])
