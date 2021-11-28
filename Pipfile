@@ -18,6 +18,8 @@ pyopenssl = "*"
 pyjwt = "*"
 django-cors-headers = "*"
 django-dotenv = "*"
+django-storages = "*"
+boto3 = "*"
 
 [dev-packages]
 flake8 = "*"

@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG")
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -61,12 +61,12 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "django_extensions",
     "corsheaders",
+    "storages",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
 SITE_ID = 1
-
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -160,11 +160,23 @@ USE_L10N = True
 
 USE_TZ = True
 
+# AWS Setting
+AWS_REGION = env("AWS_REGION")
+AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
+AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
+
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_HOST = f"s3.{AWS_REGION}.amazonaws.com"
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_HOST}"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-
-STATIC_URL = "/static/"
+if DEBUG:
+    STATIC_URL = "/static/"
+else:
+    STATICFILES_STORAGE = "config.storages.StaticStorage"
+    STATICFILES_LOCATION = "static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -181,8 +193,12 @@ REST_FRAMEWORK = {
 }
 
 # media
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+if DEBUG:
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+else:
+    DEFAULT_FILE_STORAGE = "config.storages.MediaStorage"
+    MEDIAFILES_LOCATION = "media"
 
 
 # allauth
