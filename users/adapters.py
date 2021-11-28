@@ -24,16 +24,7 @@ class CustomAccountAdapter(DefaultAccountAdapter):
 
         return user
 
-    # def send_mail(self, template_prefix, email, context):
-    #     context["activate_url"] = (
-    #         settings.URL_FRONT + "verify/email?code=" + context["key"]
-    #     )
-    #     msg = self.render_mail(template_prefix, email, context)
-    #     msg.send()
-
     # email verification redirected to the frontend part
     # 해당 url을 프론트엔드로 보내면 프론트는 url의 key를 받아서 백엔드에 'post' 메소드로 보내야 함
-    # def get_email_confirmation_url(self, request, emailconfirmation):
-    #     return settings.URL_FRONT + "verify/email?code=/{}".format(
-    #         emailconfirmation.key
-    #     )
+    def get_email_confirmation_url(self, request, emailconfirmation):
+        return settings.URL_FRONT + "verify/email?code=" + emailconfirmation.key
