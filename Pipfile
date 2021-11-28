@@ -20,6 +20,7 @@ django-cors-headers = "*"
 django-dotenv = "*"
 django-storages = "*"
 boto3 = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 flake8 = "*"
