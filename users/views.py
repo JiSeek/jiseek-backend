@@ -163,9 +163,7 @@ class KakaoLoginView(View):  # 카카오 로그인
                 last_login=timezone.now(),
             )
             new_user_info.save()
-            # access_token = jwt.encode(
-            #     {"id": new_user_info.id}, SECRET_KEY, algorithm="HS256"
-            # )  # jwt토큰 발행
+
             access_token, refresh_token = get_tokens_for_user(new_user_info)
             refresh_token, access_token = get_tokens_for_user(new_user_info)
             return JsonResponse(
