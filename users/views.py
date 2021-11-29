@@ -5,9 +5,6 @@ from django.http import JsonResponse
 from django.utils import timezone
 from dj_rest_auth.views import LoginView
 from dj_rest_auth.registration.views import VerifyEmailView
-
-import jwt, requests, datetime
-from datetime import timedelta
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.token_blacklist.models import (
@@ -18,11 +15,19 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
+from rest_framework.exceptions import MethodNotAllowed
+import jwt, requests, datetime
+from datetime import timedelta
 from .serializers import (
     CustomTokenRefreshSerializer,
     UserInfoRetrieveSerializer,
     UserInfoUpdateSerializer,
 )
+from dj_rest_auth.registration.serializers import VerifyEmailSerializer
+from allauth.account.adapter import get_adapter
+from dj_rest_auth.app_settings import create_token, LoginSerializer
+from dj_rest_auth.utils import jwt_encode
+
 
 User = get_user_model()
 SECRET_KEY = "secret_key"
@@ -53,6 +58,7 @@ class CustomLoginView(LoginView):
         expires_at = timezone.now() + timedelta(hours=2)
         added_data = {"expires_at": int(round(expires_at.timestamp()))}
         orginal_response.data.update(added_data)
+        orginal_response.data["user"]["name"] = self.user.name
         return orginal_response
 
 
@@ -262,26 +268,36 @@ class UserInfoView(generics.RetrieveUpdateAPIView):
 
 
 class CustomVerifyEmailView(VerifyEmailView):
-    # ...
+    permission_classes = (AllowAny,)
+    allowed_methods = ("POST", "OPTIONS", "HEAD")
 
-    def post(self, *args, **kwargs):
+    def get_serializer(self, *args, **kwargs):
+        return VerifyEmailSerializer(*args, **kwargs)
+
+    def get(self, *args, **kwargs):
+        raise MethodNotAllowed("GET")
+
+    def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.kwargs["key"] = serializer.validated_data["key"]
         confirmation = self.get_object()
         confirmation.confirm(self.request)
-        login_view = LoginView()
-        login_view.user = confirmation.email_address.user
 
-        if getattr(settings, "REST_USE_JWT", False):
-            self.refresh_token, self.access_token = get_tokens_for_user(self.user)
-        else:
-            self.token = create_token(
-                self.token_model,
-                self.user,
-                self.serializer,
-            )
-
-        if getattr(settings, "REST_SESSION_LOGIN", True):
-            self.process_login()
-        return login_view.get_response()
+        self.user = confirmation.email_address.user
+        self.user.last_login = timezone.now()
+        access_token, refresh_token = jwt_encode(self.user)
+        return JsonResponse(
+            {  # jwt토큰, 이름, 타입 프론트엔드에 전달
+                "access_token": str(access_token),
+                "refresh_token": str(refresh_token),
+                "user": {
+                    "email": self.user.email,
+                    "name": self.user.name,
+                    "pk": self.user.id,
+                },
+                "expires_at": timezone.now()
+                + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
+            },
+            status=200,
+        )
