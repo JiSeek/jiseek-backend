@@ -13,6 +13,7 @@ from rest_framework_simplejwt.settings import APISettings
 from rest_framework_simplejwt.settings import USER_SETTINGS
 from rest_framework_simplejwt.settings import DEFAULTS
 from rest_framework_simplejwt.settings import IMPORT_STRINGS
+from core.utils import image_resize
 
 User = get_user_model()
 
@@ -83,3 +84,11 @@ class UserInfoUpdateSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ["pk", "email", "name", "image"]
+
+    def update(self, instance, validated_data):
+        profile_data = validated_data.pop("profile")
+        image = profile_data.get("image")
+        # if image:
+        #     image_resize(image, 512, 512)
+        instance.profile.image = image
+        instance.save()
