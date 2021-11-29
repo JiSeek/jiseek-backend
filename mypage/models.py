@@ -1,9 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from PIL import Image
-from .utils import upload_image
-
+from core.utils import image_resize
+from config.storage_backends import PublicMediaStorage
 
 User = get_user_model()
 
@@ -13,7 +12,7 @@ class Profile(models.Model):
         User, on_delete=models.CASCADE, related_name="profile", null=True
     )
     image = models.ImageField(
-        upload_to=upload_image, editable=True, blank=True, null=True
+        storage=PublicMediaStorage(), editable=True, blank=True, null=True
     )
     board_favs = models.ManyToManyField(
         "boards.Board", related_name="board_favs", blank=True
@@ -25,14 +24,7 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user.name} profile"
 
-    # # Override the save method of the model
-    # def save(self, *args, **kwargs):
-    #     super().save(*args, **kwargs)
-
-    #     img = Image.open(self.image.path)  # Open image
-
-    #     # resize image
-    #     if img.height > 300 or img.width > 300:
-    #         output_size = (300, 300)
-    #         img.thumbnail(output_size)  # Resize image
-    #         img.save(self.image.path)  # Save it again and override the larger image
+    def save(self, *args, **kwargs):
+        if self.image:
+            image_resize(self.image, 512, 512)
+        super().save(*args, **kwargs)
