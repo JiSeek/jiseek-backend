@@ -7,16 +7,12 @@ from dj_rest_auth.views import LoginView
 from dj_rest_auth.registration.views import VerifyEmailView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.token_blacklist.models import (
-    BlacklistedToken,
-    OutstandingToken,
-)
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
 from rest_framework.exceptions import MethodNotAllowed
-import jwt, requests, datetime
+import requests
 from datetime import timedelta
 from .serializers import (
     CustomTokenRefreshSerializer,
@@ -24,8 +20,6 @@ from .serializers import (
     UserInfoUpdateSerializer,
 )
 from dj_rest_auth.registration.serializers import VerifyEmailSerializer
-from allauth.account.adapter import get_adapter
-from dj_rest_auth.app_settings import create_token, LoginSerializer
 from dj_rest_auth.utils import jwt_encode
 
 
@@ -48,7 +42,7 @@ class LogoutView(APIView):
             token.blacklist()
 
             return Response(status=status.HTTP_205_RESET_CONTENT)
-        except Exception as e:
+        except Exception:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -107,7 +101,7 @@ class GoogleLoginView(View):
                 last_login=timezone.now(),
             )
             new_user_info.save()  # DB에 저장
-            refresh_token, access_token = get_tokens_for_user(user_info)
+            refresh_token, access_token = get_tokens_for_user(new_user_info)
             return JsonResponse(
                 {  # jwt토큰, 이름, 타입 프론트엔드에 전달
                     "access_token": access_token,
@@ -172,8 +166,8 @@ class KakaoLoginView(View):  # 카카오 로그인
             # access_token = jwt.encode(
             #     {"id": new_user_info.id}, SECRET_KEY, algorithm="HS256"
             # )  # jwt토큰 발행
-            access_token, refresh_token = get_tokens_for_user(user_info)
-            refresh_token, access_token = get_tokens_for_user(user_info)
+            access_token, refresh_token = get_tokens_for_user(new_user_info)
+            refresh_token, access_token = get_tokens_for_user(new_user_info)
             return JsonResponse(
                 {  # jwt토큰, 이름, 타입 프론트엔드에 전달
                     "access_token": access_token,
@@ -230,7 +224,7 @@ class NaverLoginView(View):  # 네이버 로그인
                 last_login=timezone.now(),
             )
             new_user_info.save()
-            refresh_token, access_token = get_tokens_for_user(user_info)
+            refresh_token, access_token = get_tokens_for_user(new_user_info)
             return JsonResponse(
                 {  # jwt토큰, 이름, 타입 프론트엔드에 전달
                     "access_token": access_token,

@@ -166,7 +166,7 @@ if DEBUG:
     STATIC_URL = "/static/"
 else:
     STATICFILES_STORAGE = "config.storages.StaticStorage"
-    STATICFILES_LOCATION = "static"
+STATICFILES_LOCATION = "static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -188,7 +188,7 @@ if DEBUG:
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 else:
     DEFAULT_FILE_STORAGE = "config.storages.MediaStorage"
-    MEDIAFILES_LOCATION = "media"
+MEDIAFILES_LOCATION = "media"
 
 
 # allauth
