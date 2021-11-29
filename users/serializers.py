@@ -81,7 +81,6 @@ class UserInfoUpdateSerializer(ModelSerializer):
     def update(self, instance, validated_data):
         profile_data = validated_data.pop("profile")
         image = profile_data.get("image")
-        # if image:
-        #     image_resize(image, 512, 512)
         instance.profile.image = image
         instance.save()
+        return instance
