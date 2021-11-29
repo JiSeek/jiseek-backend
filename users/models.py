@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from .managers import CustomUserManager
-from rest_framework.validators import UniqueValidator
 
 
 class User(AbstractBaseUser, PermissionsMixin):

@@ -1,8 +1,6 @@
 from django.conf import settings
 from allauth.account.adapter import DefaultAccountAdapter
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
-from mypage.models import Profile
 
 User = get_user_model()
 

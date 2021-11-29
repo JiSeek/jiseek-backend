@@ -1,19 +1,15 @@
 from django.utils import timezone
 from django.conf import settings
-from django.forms.fields import ImageField
 from rest_framework import serializers
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from django.contrib.auth import get_user_model
 from rest_framework.serializers import ModelSerializer
-from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
-from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.settings import APISettings
 from rest_framework_simplejwt.settings import USER_SETTINGS
 from rest_framework_simplejwt.settings import DEFAULTS
 from rest_framework_simplejwt.settings import IMPORT_STRINGS
-from core.utils import image_resize
 
 User = get_user_model()
 
@@ -33,9 +29,6 @@ class CustomRegisterSerializer(RegisterSerializer):
 
 
 api_settings = APISettings(USER_SETTINGS, DEFAULTS, IMPORT_STRINGS)
-
-if api_settings.BLACKLIST_AFTER_ROTATION:
-    from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken
 
 
 class CustomTokenRefreshSerializer(TokenRefreshSerializer):

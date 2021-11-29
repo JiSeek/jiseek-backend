@@ -9,7 +9,6 @@ from .serializers import (
     BoardFavsSerializer,
     FoodFavsSerializer,
 )
-from boards.serializers import BoardSerializer
 from .models import Profile
 from boards.models import Board
 from foods.models import Food

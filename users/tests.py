@@ -1,6 +1,5 @@
 import json
 from django.test import TestCase, Client
-from .models import User
 from django.contrib.auth import get_user_model
 
 client = Client()
