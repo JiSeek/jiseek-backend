@@ -1,12 +1,14 @@
 from rest_framework.decorators import action
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from foods.models import Food
 from foods.serializers import FoodSerializer, FoodsSerializer
 
 
 class FoodViewSet(ReadOnlyModelViewSet):
     queryset = Food.objects.all()
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_serializer_class(self):
         if self.action == "retrieve":
