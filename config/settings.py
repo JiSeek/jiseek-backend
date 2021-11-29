@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 env = os.environ.get
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -14,7 +15,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -54,7 +55,6 @@ THIRD_PARTY_APPS = [
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
 SITE_ID = 1
-
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -150,12 +150,23 @@ USE_L10N = True
 
 USE_TZ = True
 
+# AWS Setting
+AWS_REGION = env("AWS_REGION")
+AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
+AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
+
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_HOST = f"s3.{AWS_REGION}.amazonaws.com"
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_HOST}"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-# s3
-
-
+if DEBUG:
+    STATIC_URL = "/static/"
+else:
+    STATICFILES_STORAGE = "config.storages.StaticStorage"
+    STATICFILES_LOCATION = "static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -170,6 +181,14 @@ REST_FRAMEWORK = {
         "dj_rest_auth.jwt_auth.JWTCookieAuthentication",
     ),
 }
+
+# media
+if DEBUG:
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+else:
+    DEFAULT_FILE_STORAGE = "config.storages.MediaStorage"
+    MEDIAFILES_LOCATION = "media"
 
 
 # allauth
@@ -217,7 +236,6 @@ AUTHENTICATION_BACKENDS = (
 # jwt 설정
 REST_USE_JWT = True
 
-from datetime import timedelta
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=2),
@@ -237,4 +255,7 @@ else:
         "https://sub.example.com",
         "http://localhost:8080",
         "http://127.0.0.1:3000",
+    ]
+    CORS_ORIGIN_WHITELIST = [
+        "http://localhost:8000",
     ]

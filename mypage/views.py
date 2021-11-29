@@ -61,10 +61,19 @@ class FoodFavsAPI(generics.ListAPIView):
 @permission_classes([IsAuthenticated])
 def like_board(request, pk):
     user_id = request.user.id
+    user = User.objects.get(pk=user_id)
     profile = Profile.objects.get(user_id=user_id)
     board = Board.objects.get(pk=pk)
 
     if profile and board:
+        if user in board.like_users.all():
+            board.like_users.remove(user)
+            board.count -= 1
+            board.save()
+        else:
+            board.like_users.add(user)
+            board.count += 1
+            board.save()
         if board in profile.board_favs.all():
             profile.board_favs.remove(board)
             return Response("Removed")

@@ -1,8 +1,5 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from boards.serializers import BoardSerializer
-from foods.serializers import FoodSerializer
-from .models import Profile
 from boards.models import Board
 from foods.models import Food
 

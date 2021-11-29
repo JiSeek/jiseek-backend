@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 from core.utils import image_resize
-from config.storage_backends import PublicMediaStorage
+from config.storages import MediaStorage
 
 User = get_user_model()
 
@@ -12,7 +12,7 @@ class Profile(models.Model):
         User, on_delete=models.CASCADE, related_name="profile", null=True
     )
     image = models.ImageField(
-        storage=PublicMediaStorage(), editable=True, blank=True, null=True
+        storage=MediaStorage(), editable=True, blank=True, null=True
     )
     board_favs = models.ManyToManyField(
         "boards.Board", related_name="board_favs", blank=True

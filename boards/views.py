@@ -5,17 +5,18 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from boards.models import Board, Comment
-from .serializers import BoardSerializer, CommentSerializer
+from .serializers import BoardSerializer, BoardsSerializer, CommentSerializer
 from .permissions import IsSelfOrReadOnly
 
 
 class BoardPagination(PageNumberPagination):
-    page_size = 9
+    page_size = 24
 
 
 class BoardsView(ListCreateAPIView):
     queryset = Board.objects.all()
-    serializer_class = BoardSerializer
+    serializer_class = BoardsSerializer
+    pagination_class = BoardPagination
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

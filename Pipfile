@@ -16,8 +16,10 @@ werkzeug = "*"
 pyopenssl = "*"
 pyjwt = "*"
 django-cors-headers = "*"
-boto3 = "*"
+django-dotenv = "*"
 django-storages = "*"
+boto3 = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 flake8 = "*"
