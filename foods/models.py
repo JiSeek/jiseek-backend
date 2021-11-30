@@ -40,6 +40,9 @@ class Food(models.Model):
     Omega_3_fatty_acids = models.DecimalField(max_digits=10, decimal_places=2)
     trans_fatty_acids = models.DecimalField(max_digits=10, decimal_places=2)
     folate = models.DecimalField(max_digits=10, decimal_places=2)
+    image1 = models.CharField(max_length=100)
+    image2 = models.CharField(max_length=100)
+    image3 = models.CharField(max_length=100)
 
     def __str__(self) -> str:
         return self.name
