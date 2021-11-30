@@ -27,7 +27,7 @@ class Profile(models.Model):
     )
 
     def __str__(self):
-        return f"{self.user.id} profile"
+        return f"{self.user.id}_profile"
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)  # saving image first
