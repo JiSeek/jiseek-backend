@@ -22,7 +22,7 @@ class Board(CoreModel):
     count = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.user.id} board"
+        return f"{self.user.id}_board"
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
