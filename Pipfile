@@ -58,6 +58,7 @@ PyJWT = {version = "==2.3.0", extras = ["crypto"]}
 pyOpenSSL = "==21.0.0"
 PyYAML = "==6.0"
 Werkzeug = "==2.0.2"
+"backports.zoneinfo" = "*"
 
 [dev-packages]
 flake8 = "*"
