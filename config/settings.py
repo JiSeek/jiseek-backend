@@ -13,9 +13,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["127.0.0.1"]
 
 
 # Application definition
@@ -153,8 +153,8 @@ USE_TZ = True
 # AWS Setting
 AWS_REGION = env("AWS_REGION")
 AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
-AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
+AWS_S3_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
+AWS_S3_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
 
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_HOST = f"s3.{AWS_REGION}.amazonaws.com"
@@ -202,7 +202,7 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 LOGIN_ON_EMAIL_CONFIRMATION = True
@@ -216,7 +216,7 @@ else:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 EMAIL_USE_TLS = True
-EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST = "email-smtp.ap-northeast-2.amazonaws.com"
 EMAIL_PORT = 587
 EMAIL_HOST_USER = DEFAULT_FROM_EMAIL = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
@@ -251,11 +251,11 @@ if DEBUG:
 else:
     CORS_ALLOWED_ORIGINS = [
         # 허용할 Origin 추가
-        "https://example.com",
-        "https://sub.example.com",
-        "http://localhost:8080",
-        "http://127.0.0.1:3000",
+        "https://h2d8lv16ab.execute-api.ap-northeast-2.amazonaws.com",
+        "http://team2-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
     ]
     CORS_ORIGIN_WHITELIST = [
         "http://localhost:8000",
+        "https://h2d8lv16ab.execute-api.ap-northeast-2.amazonaws.com",
+        "http://team2-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
     ]
