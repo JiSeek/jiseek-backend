@@ -17,6 +17,7 @@ class BoardsView(ListCreateAPIView):
     queryset = Board.objects.all()
     serializer_class = BoardsSerializer
     pagination_class = BoardPagination
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

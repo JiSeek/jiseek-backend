@@ -18,8 +18,9 @@ pyjwt = "*"
 django-cors-headers = "*"
 django-storages = "*"
 boto3 = "*"
-psycopg2-binary = "*"
 django-dotenv = "*"
+zappa = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 flake8 = "*"
