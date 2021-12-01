@@ -15,7 +15,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = ["127.0.0.1", "x2uxtymvof.execute-api.ap-northeast-2.amazonaws.com"]
 
 
 # Application definition
@@ -204,7 +204,7 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
-ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False
 LOGIN_ON_EMAIL_CONFIRMATION = True
 OLD_PASSWORD_FIELD_ENABLED = True
 
@@ -253,9 +253,11 @@ else:
         # 허용할 Origin 추가
         "https://h2d8lv16ab.execute-api.ap-northeast-2.amazonaws.com",
         "http://team2-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
+        "http://localhost:3000",
     ]
     CORS_ORIGIN_WHITELIST = [
         "http://localhost:8000",
         "https://h2d8lv16ab.execute-api.ap-northeast-2.amazonaws.com",
         "http://team2-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
+        "http://localhost:3000",
     ]
