@@ -7,39 +7,47 @@ class Food(models.Model):
     classification = models.CharField(max_length=40)
     size = models.DecimalField(max_digits=10, decimal_places=2)
     kcal = models.DecimalField(max_digits=10, decimal_places=2)
-    moisture = models.DecimalField(max_digits=10, decimal_places=2)
-    protein = models.DecimalField(max_digits=10, decimal_places=2)
-    fat = models.DecimalField(max_digits=10, decimal_places=2)
-    carbohydrate = models.DecimalField(max_digits=10, decimal_places=2)
-    total_sugar = models.DecimalField(max_digits=10, decimal_places=2)
-    dietary_fiber = models.DecimalField(max_digits=10, decimal_places=2)
-    Ca = models.DecimalField(max_digits=10, decimal_places=2)
-    Fe = models.DecimalField(max_digits=10, decimal_places=2)
-    Mg = models.DecimalField(max_digits=10, decimal_places=2)
-    P = models.DecimalField(max_digits=10, decimal_places=2)
-    K = models.DecimalField(max_digits=10, decimal_places=2)
-    Na = models.DecimalField(max_digits=10, decimal_places=2)
-    Zn = models.DecimalField(max_digits=10, decimal_places=2)
-    Cu = models.DecimalField(max_digits=10, decimal_places=2)
-    Vitamin_D = models.DecimalField(max_digits=10, decimal_places=2)
-    Vitamin_K = models.DecimalField(max_digits=10, decimal_places=2)
-    Vitamin_B1 = models.DecimalField(max_digits=10, decimal_places=2)
-    Vitamin_B2 = models.DecimalField(max_digits=10, decimal_places=2)
-    Vitamin_B12 = models.DecimalField(max_digits=10, decimal_places=2)
-    Vitamin_C = models.DecimalField(max_digits=10, decimal_places=2)
-    total_amino_acids = models.DecimalField(max_digits=10, decimal_places=2)
-    essential_amino_acids = models.DecimalField(max_digits=10, decimal_places=2)
-    Phenylalanine = models.DecimalField(max_digits=10, decimal_places=2)
-    Cholesterol = models.DecimalField(max_digits=10, decimal_places=2)
-    total_fatty_acids = models.DecimalField(max_digits=10, decimal_places=2)
-    total_essential_fatty_acids = models.DecimalField(max_digits=10, decimal_places=2)
-    total_saturated_fatty_acids = models.DecimalField(max_digits=10, decimal_places=2)
-    total_polyunsaturated_fatty_acids = models.DecimalField(
-        max_digits=10, decimal_places=2
+    moisture = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    protein = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    fat = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    carbohydrate = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    total_sugar = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    dietary_fiber = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    Ca = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    Fe = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    Mg = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    P = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    K = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    Na = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    Zn = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    Cu = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    Vitamin_D = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    Vitamin_K = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    Vitamin_B1 = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    Vitamin_B2 = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    Vitamin_B12 = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    Vitamin_C = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    total_amino_acids = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    essential_amino_acids = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True
     )
-    Omega_3_fatty_acids = models.DecimalField(max_digits=10, decimal_places=2)
-    trans_fatty_acids = models.DecimalField(max_digits=10, decimal_places=2)
-    folate = models.DecimalField(max_digits=10, decimal_places=2)
+    Phenylalanine = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    Cholesterol = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    total_fatty_acids = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    total_essential_fatty_acids = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True
+    )
+    total_saturated_fatty_acids = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True
+    )
+    total_polyunsaturated_fatty_acids = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True
+    )
+    Omega_3_fatty_acids = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True
+    )
+    trans_fatty_acids = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    folate = models.DecimalField(max_digits=10, decimal_places=2, null=True)
 
     def __str__(self) -> str:
         return self.name
