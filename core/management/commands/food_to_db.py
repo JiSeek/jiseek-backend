@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = "Add food nutrient data to database"
 
     def handle(self, *args, **options):
-        with open("data/food_nutrient.csv") as file:
+        with open("data/food_nutrient_img.csv") as file:
             reader = csv.DictReader(file, delimiter="|")
             for r in reader:
                 Food.objects.create(
@@ -47,4 +47,7 @@ class Command(BaseCommand):
                     Omega_3_fatty_acids=r["오메가 3 지방산(g)"],
                     trans_fatty_acids=r["트랜스 지방산(g)"],
                     folate=r["엽산(㎍)"],
+                    image1=f"https://reviewkingwordcloud.s3.ap-northeast-2.amazonaws.com/{r['img1']}",
+                    image2=f"https://reviewkingwordcloud.s3.ap-northeast-2.amazonaws.com/{r['img2']}",
+                    image3=f"https://reviewkingwordcloud.s3.ap-northeast-2.amazonaws.com/{r['img3']}",
                 )
