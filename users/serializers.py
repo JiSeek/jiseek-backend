@@ -80,8 +80,10 @@ class UserInfoUpdateSerializer(ModelSerializer):
 
     def update(self, instance, validated_data):
         profile_data = validated_data.pop("profile")
+        name = validated_data.pop("name")
         image = profile_data.get("image")
         if image:
             instance.profile.image = image
+        instance.name = name
         instance.save()
         return instance
