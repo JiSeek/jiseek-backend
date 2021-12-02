@@ -72,11 +72,12 @@ class UserInfoRetrieveSerializer(ModelSerializer):
 
 class UserInfoUpdateSerializer(ModelSerializer):
     email = serializers.EmailField(read_only=True)
+    social_platform = serializers.Charfield(read_only=True)
     image = serializers.ImageField(source="profile.image")
 
     class Meta:
         model = User
-        fields = ["pk", "email", "name", "image"]
+        fields = ["pk", "email", "name", "image", "social_platform"]
 
     def update(self, instance, validated_data):
         profile_data = validated_data.pop("profile")
