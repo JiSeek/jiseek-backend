@@ -37,4 +37,4 @@ class Profile(models.Model):
             if img.height > 300 or img.width > 300:
                 new_img = (300, 300)
                 img.thumbnail(new_img)
-                img.save(self.image)  # saving image at the same path
+                img.save()  # saving image at the same path
