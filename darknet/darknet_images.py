@@ -20,7 +20,7 @@ def parser():
                         "If no input is given, ")
     parser.add_argument("--batch_size", default=1, type=int,
                         help="number of images to be processed at the same time")
-    parser.add_argument("--weights", default="backup/yolov4-obj_36000.weights",
+    parser.add_argument("--weights", default="backup/yolov4-obj_last.weights",
                         help="yolo weights path")
     parser.add_argument("--dont_show", action='store_true',
                         help="windown inference display. For headless systems")
@@ -193,8 +193,9 @@ def save_annotations(name, image, detections, class_names):
             bottom_x = c_x + half_w
             bottom_y = c_y + half_h
 
-            result.append([label, class_names[label], confidence, top_x, top_y, bottom_x, bottom_y]) # customed
-            print("label:", label, "class_name:", class_names[label], "confidence:", confidence, "coordinates:", top_x, top_y, bottom_x, bottom_y, bbox)
+            # result.append([label, class_names[label], confidence, top_x, top_y, bottom_x, bottom_y]) # customed
+            result.append([label, class_names[label], confidence, round(x*width), round(y*height), round(w*width), round(h*height)])
+            print("label:", label, "class_name:", class_names[label], "confidence:", confidence, "coordinates:", top_x, top_y, bottom_x, bottom_y, bbox, round(x*width), round(y*height), round(w*width), round(h*height))
 
     return result # customed
 
