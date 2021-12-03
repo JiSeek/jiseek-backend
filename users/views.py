@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
 from rest_framework.exceptions import MethodNotAllowed
-import requests
+import requests, json
 from datetime import timedelta
 from .serializers import (
     CustomTokenRefreshSerializer,
@@ -51,12 +51,16 @@ class CustomLoginView(LoginView):
     def get_response(self):
         orginal_response = super().get_response()
         expires_at = timezone.now() + timedelta(hours=2)
-        added_data = {
+        expires_at_data = {
             "expires_at": int(round(expires_at.timestamp())),
+        }
+        social_platform_data = {
             "social_platform": self.user.social_platform,
         }
-        orginal_response.data.update(added_data)
+        orginal_response.data.update(expires_at_data)
         orginal_response.data["user"]["name"] = self.user.name
+        orginal_response.data["user"]["social_platform"] = social_platform_data
+
         return orginal_response
 
 
@@ -88,8 +92,8 @@ class GoogleLoginView(View):
                         "email": user_info.email,
                         "name": user_info.name,
                         "pk": user_info.id,
+                        "social_platform": user_info.social_platform,
                     },
-                    "social_platform": user_info.social_platform,
                     "expires_at": int(round(expires_at.timestamp())),
                 },
                 status=200,
@@ -112,8 +116,8 @@ class GoogleLoginView(View):
                         "email": new_user_info.email,
                         "name": new_user_info.name,
                         "pk": new_user_info.id,
+                        "social_platform": new_user_info.social_platform,
                     },
-                    "social_platform": new_user_info.social_platform,
                     "expires_at": timezone.now()
                     + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
                 },
@@ -151,8 +155,8 @@ class KakaoLoginView(View):  # 카카오 로그인
                         "email": user_info.email,
                         "name": user_info.name,
                         "pk": user_info.id,
+                        "social_platform": user_info.social_platform,
                     },
-                    "social_platform": user_info.social_platform,
                     "expires_at": int(round(expires_at.timestamp())),
                 },
                 status=200,
@@ -177,8 +181,8 @@ class KakaoLoginView(View):  # 카카오 로그인
                         "email": new_user_info.email,
                         "name": new_user_info.name,
                         "pk": new_user_info.id,
+                        "social_platform": new_user_info.social_platform,
                     },
-                    "social_platform": new_user_info.social_platform,
                     "expires_at": timezone.now()
                     + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
                 },
@@ -212,8 +216,8 @@ class NaverLoginView(View):  # 네이버 로그인
                         "email": user_info.email,
                         "name": user_info.name,
                         "pk": user_info.id,
+                        "social_platform": user_info.social_platform,
                     },
-                    "social_platform": user_info.social_platform,
                     "expires_at": timezone.now()
                     + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
                 },
@@ -237,8 +241,8 @@ class NaverLoginView(View):  # 네이버 로그인
                         "email": new_user_info.email,
                         "name": new_user_info.name,
                         "pk": new_user_info.id,
+                        "social_platform": new_user_info.social_platform,
                     },
-                    "social_platform": new_user_info.social_platform,
                     "expires_at": timezone.now()
                     + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
                 },
