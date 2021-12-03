@@ -60,7 +60,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
+    # "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -254,10 +254,12 @@ else:
         "https://h2d8lv16ab.execute-api.ap-northeast-2.amazonaws.com",
         "http://team2-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
         "http://localhost:3000",
+        "https://getpostman.com",
     ]
     CORS_ORIGIN_WHITELIST = [
         "http://localhost:8000",
         "https://h2d8lv16ab.execute-api.ap-northeast-2.amazonaws.com",
         "http://team2-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
         "http://localhost:3000",
+        "https://getpostman.com",
     ]
