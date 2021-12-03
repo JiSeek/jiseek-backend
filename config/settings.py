@@ -15,7 +15,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = ["127.0.0.1", "x2uxtymvof.execute-api.ap-northeast-2.amazonaws.com"]
 
 
 # Application definition
@@ -202,9 +202,9 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
-ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False
 LOGIN_ON_EMAIL_CONFIRMATION = True
 OLD_PASSWORD_FIELD_ENABLED = True
 
@@ -216,7 +216,7 @@ else:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 EMAIL_USE_TLS = True
-EMAIL_HOST = "email-smtp.ap-northeast-2.amazonaws.com"
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_HOST_USER = DEFAULT_FROM_EMAIL = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
@@ -251,11 +251,13 @@ if DEBUG:
 else:
     CORS_ALLOWED_ORIGINS = [
         # 허용할 Origin 추가
-        "https://h2d8lv16ab.execute-api.ap-northeast-2.amazonaws.com",
+        "https://x2uxtymvof.execute-api.ap-northeast-2.amazonaws.com/",
         "http://team2-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
+        "http://localhost:3000",
     ]
     CORS_ORIGIN_WHITELIST = [
         "http://localhost:8000",
-        "https://h2d8lv16ab.execute-api.ap-northeast-2.amazonaws.com",
+        "https://x2uxtymvof.execute-api.ap-northeast-2.amazonaws.com/",
         "http://team2-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
+        "http://localhost:3000",
     ]
