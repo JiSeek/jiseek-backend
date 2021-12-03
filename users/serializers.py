@@ -72,7 +72,7 @@ class UserInfoRetrieveSerializer(ModelSerializer):
 
 class UserInfoUpdateSerializer(ModelSerializer):
     email = serializers.EmailField(read_only=True)
-    social_platform = serializers.Charfield(read_only=True)
+    social_platform = serializers.CharField(read_only=True)
     image = serializers.ImageField(source="profile.image")
 
     class Meta:
