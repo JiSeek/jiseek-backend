@@ -32,10 +32,13 @@ class BoardSerializer(ModelSerializer):
 
     def get_is_fav(self, obj):
         request = self.context.get("request")
-        if request:
-            user = request.user
-            profile = Profile.objects.get(user_id=user.id)
-            return obj in profile.board_favs.all()
+        try:
+            if request:
+                user = request.user
+                profile = Profile.objects.get(user_id=user.id)
+                return obj in profile.board_favs.all()
+        except Exception:
+            return False
         return False
 
     class Meta:
