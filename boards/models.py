@@ -25,7 +25,6 @@ class Board(CoreModel):
         return f"{self.user.id}_board"
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
         if self.photo:
             img = Image.open(self.photo)  # Open image using self
 
@@ -33,6 +32,7 @@ class Board(CoreModel):
                 new_img = (800, 800)
                 img.thumbnail(new_img)
                 img.save(self.photo)  # saving image at the same path
+        super().save(*args, **kwargs)
 
     class Meta:
         ordering = ["-created"]
