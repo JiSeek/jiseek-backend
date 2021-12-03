@@ -60,12 +60,9 @@ class CustomLoginView(LoginView):
 
 
 class GoogleLoginView(View):
-    # 소셜로그인을 하면 User테이블에 아이디와 패스워드를 담아두고
-
-    def get(self, request):  # id_token만 이용해 헤더로 받기
-        token = request.headers[
-            "Authorization"
-        ]  # 프론트엔드에서 HTTP로 들어온 헤더에서 id_token(Authorization)을 변수에 저장
+    def post(self, request):  # id_token만 key 값으로 받기
+        data = json.loads(request.body)
+        access_token = data.get("key", None)
         url = "https://oauth2.googleapis.com/tokeninfo?id_token="  # 토큰을 이용해서 회원의 정보를 확인하기 위한 google api주소
         response = requests.get(url + token)  # 구글에 id_token을 보내 디코딩 요청
         user = response.json()  # 유저의 정보를 json화해서 변수에 저장
@@ -124,11 +121,10 @@ class GoogleLoginView(View):
 
 
 class KakaoLoginView(View):  # 카카오 로그인
-    def get(self, request):  # 프론트로부터 전달받은 access_token으로 사용자 정보 가져오기
-        access_token = request.headers["Authorization"]
-        headers = {
-            "Authorization": f"{access_token}",
-        }
+    def post(self, request):  # 프론트로부터 전달받은 access_token으로 사용자 정보 가져오기
+        data = json.loads(request.body)
+        access_token = data.get("key", None)
+        headers = {"Authorization": f"Bearer {access_token}"}
         url = "https://kapi.kakao.com/v2/user/me"  # Authorization(프론트에서 받은 토큰)을 이용해서 회원의 정보를 확인하기 위한 카카오 API 주소
         response = requests.request(
             "GET", url, headers=headers
@@ -190,8 +186,9 @@ class KakaoLoginView(View):  # 카카오 로그인
 
 
 class NaverLoginView(View):  # 네이버 로그인
-    def get(self, request):
-        access_token = request.headers["Authorization"]
+    def post(self, request):
+        data = json.loads(request.body)
+        access_token = data.get("key", None)
         headers = {"Authorization": f"Bearer {access_token}"}
         url = "https://openapi.naver.com/v1/nid/me"  # Authorization(프론트에서 받은 토큰)을 이용해서 회원의 정보를 확인하기 위한 네이버 API 주소
         response = requests.request(
