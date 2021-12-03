@@ -1,6 +1,7 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField, CharField
 from .models import Board, Comment
 from mypage.models import Profile
+from users.serializers import UserInfoRetrieveSerializer
 
 
 class CommentSerializer(ModelSerializer):
@@ -12,6 +13,7 @@ class CommentSerializer(ModelSerializer):
 
 class BoardsSerializer(ModelSerializer):
     content = CharField(write_only=True)
+    user = UserInfoRetrieveSerializer(read_only=True)
 
     class Meta:
         model = Board
@@ -27,6 +29,7 @@ class BoardsSerializer(ModelSerializer):
 
 
 class BoardSerializer(ModelSerializer):
+    user = UserInfoRetrieveSerializer(read_only=True)
     comment = CommentSerializer(read_only=True, many=True)
     is_fav = SerializerMethodField()
 
