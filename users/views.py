@@ -18,6 +18,7 @@ from .serializers import (
     CustomTokenRefreshSerializer,
     UserInfoRetrieveSerializer,
     UserInfoUpdateSerializer,
+    UserInfoPartialUpdateSerializer,
 )
 from dj_rest_auth.registration.serializers import VerifyEmailSerializer
 from dj_rest_auth.utils import jwt_encode
@@ -252,8 +253,10 @@ class UserInfoView(generics.RetrieveUpdateAPIView):
 
     def get_serializer_class(self):
         serializer_class = self.serializer_class
-        if self.request.method == "PUT" or self.request.method == "PATCH":
+        if self.request.method == "PUT":
             serializer_class = UserInfoUpdateSerializer
+        if self.request.method == "PATCH":
+            serializer_class = UserInfoPartialUpdateSerializer
         return serializer_class
 
 

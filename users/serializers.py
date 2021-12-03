@@ -87,3 +87,31 @@ class UserInfoUpdateSerializer(ModelSerializer):
         instance.name = name
         instance.save()
         return instance
+
+
+class UserInfoPartialUpdateSerializer(ModelSerializer):
+    email = serializers.EmailField(read_only=True)
+    social_platform = serializers.CharField(read_only=True)
+    image = serializers.ImageField(source="profile.image")
+
+    class Meta:
+        model = User
+        fields = ["pk", "email", "name", "image", "social_platform"]
+
+    def update(self, instance, validated_data):
+        try:
+            profile_data = validated_data.pop("profile")
+            if profile_data:
+                image = profile_data.get("image")
+                if image:
+                    instance.profile.image = image
+        except:
+            pass
+        try:
+            name = validated_data.pop("name")
+            instance.name = name
+        except:
+            pass
+
+        instance.save()
+        return instance
