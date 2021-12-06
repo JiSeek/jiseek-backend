@@ -9,6 +9,7 @@ urlpatterns = [
     path("api/v1/mypage/", include("mypage.urls")),
     path("api/v1/boards/", include("boards.urls")),
     path("api/v1/foods/", include("foods.urls")),
+    path("api/v1/search/", include("search.urls")),
 ]
 
 
