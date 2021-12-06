@@ -59,6 +59,7 @@ pyOpenSSL = "==21.0.0"
 PyYAML = "==6.0"
 Werkzeug = "==2.0.2"
 "backports.zoneinfo" = "*"
+zappa-django-utils = "*"
 
 [dev-packages]
 flake8 = "*"

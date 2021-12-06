@@ -36,6 +36,7 @@ PROJECT_APPS = [
     "users.apps.UsersConfig",
     "foods.apps.FoodsConfig",
     "mypage.apps.MypageConfig",
+    "search.apps.SearchConfig",
 ]
 
 
@@ -50,6 +51,7 @@ THIRD_PARTY_APPS = [
     "django_extensions",
     "corsheaders",
     "storages",
+    "zappa_django_utils",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
@@ -159,7 +161,7 @@ AWS_S3_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_HOST = f"s3.{AWS_REGION}.amazonaws.com"
 AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_HOST}"
-
+AWS_DEFAULT_ACL = "public-read"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 if DEBUG:
@@ -202,7 +204,7 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False
 LOGIN_ON_EMAIL_CONFIRMATION = True
@@ -216,7 +218,7 @@ else:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 EMAIL_USE_TLS = True
-EMAIL_HOST = "email-smtp.ap-northeast-2.amazonaws.com"
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_HOST_USER = DEFAULT_FROM_EMAIL = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
@@ -251,14 +253,12 @@ if DEBUG:
 else:
     CORS_ALLOWED_ORIGINS = [
         # 허용할 Origin 추가
-        "https://h2d8lv16ab.execute-api.ap-northeast-2.amazonaws.com",
         "http://team2-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
         "http://localhost:3000",
         "https://getpostman.com",
     ]
     CORS_ORIGIN_WHITELIST = [
         "http://localhost:8000",
-        "https://h2d8lv16ab.execute-api.ap-northeast-2.amazonaws.com",
         "http://team2-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
         "http://localhost:3000",
         "https://getpostman.com",

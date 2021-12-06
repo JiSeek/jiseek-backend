@@ -51,17 +51,23 @@ class CustomLoginView(LoginView):
     def get_response(self):
         orginal_response = super().get_response()
         expires_at = timezone.now() + timedelta(hours=2)
-        added_data = {"expires_at": int(round(expires_at.timestamp()))}
-        orginal_response.data.update(added_data)
+        expires_at_data = {
+            "expires_at": int(round(expires_at.timestamp())),
+        }
+        social_platform_data = {
+            "social_platform": self.user.social_platform,
+        }
+        orginal_response.data.update(expires_at_data)
         orginal_response.data["user"]["name"] = self.user.name
+        orginal_response.data["social_platform"] = social_platform_data
+
         return orginal_response
 
 
 class GoogleLoginView(View):
-    def post(self, request):  # id_token만 바디에 받기
+    def post(self, request):  # id_token만 key 값으로 받기
         data = json.loads(request.body)
         access_token = data.get("key", None)
-        # 프론트엔드에서 바디로 보내준 id_token(Authorization)을 변수에 저장
         url = "https://oauth2.googleapis.com/tokeninfo?id_token="  # 토큰을 이용해서 회원의 정보를 확인하기 위한 google api주소
         response = requests.get(url + access_token)  # 구글에 id_token을 보내 디코딩 요청
         user = response.json()  # 유저의 정보를 json화해서 변수에 저장
@@ -86,6 +92,7 @@ class GoogleLoginView(View):
                         "email": user_info.email,
                         "name": user_info.name,
                         "pk": user_info.id,
+                        "social_platform": user_info.social_platform,
                     },
                     "expires_at": int(round(expires_at.timestamp())),
                 },
@@ -109,6 +116,7 @@ class GoogleLoginView(View):
                         "email": new_user_info.email,
                         "name": new_user_info.name,
                         "pk": new_user_info.id,
+                        "social_platform": new_user_info.social_platform,
                     },
                     "expires_at": timezone.now()
                     + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
@@ -147,6 +155,7 @@ class KakaoLoginView(View):  # 카카오 로그인
                         "email": user_info.email,
                         "name": user_info.name,
                         "pk": user_info.id,
+                        "social_platform": user_info.social_platform,
                     },
                     "expires_at": int(round(expires_at.timestamp())),
                 },
@@ -172,6 +181,7 @@ class KakaoLoginView(View):  # 카카오 로그인
                         "email": new_user_info.email,
                         "name": new_user_info.name,
                         "pk": new_user_info.id,
+                        "social_platform": new_user_info.social_platform,
                     },
                     "expires_at": timezone.now()
                     + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
@@ -206,6 +216,7 @@ class NaverLoginView(View):  # 네이버 로그인
                         "email": user_info.email,
                         "name": user_info.name,
                         "pk": user_info.id,
+                        "social_platform": user_info.social_platform,
                     },
                     "expires_at": timezone.now()
                     + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
@@ -230,6 +241,7 @@ class NaverLoginView(View):  # 네이버 로그인
                         "email": new_user_info.email,
                         "name": new_user_info.name,
                         "pk": new_user_info.id,
+                        "social_platform": new_user_info.social_platform,
                     },
                     "expires_at": timezone.now()
                     + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
@@ -255,7 +267,7 @@ class UserInfoView(generics.RetrieveUpdateAPIView):
         serializer_class = self.serializer_class
         if self.request.method == "PUT":
             serializer_class = UserInfoUpdateSerializer
-        if self.request.method == "PATCH":
+        elif self.request.method == "PATCH":
             serializer_class = UserInfoPartialUpdateSerializer
         return serializer_class
 

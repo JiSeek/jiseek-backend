@@ -1,5 +1,9 @@
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import (
+    ListAPIView,
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+)
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -11,6 +15,12 @@ from .permissions import IsSelfOrReadOnly
 
 class BoardPagination(PageNumberPagination):
     page_size = 24
+
+
+class BoardsRankView(ListAPIView):
+    queryset = Board.objects.order_by("-count")[:9]
+    serializer_class = BoardSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class BoardsView(ListCreateAPIView):
@@ -37,6 +47,13 @@ class BoardView(RetrieveUpdateDestroyAPIView):
 
 class CommentsView(ListCreateAPIView):
     serializer_class = CommentSerializer
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            permission_classes = [IsAuthenticatedOrReadOnly]
+        else:
+            permission_classes = [IsSelfOrReadOnly]
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         pk = self.kwargs["pk"]
