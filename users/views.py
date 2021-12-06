@@ -59,7 +59,7 @@ class CustomLoginView(LoginView):
         }
         orginal_response.data.update(expires_at_data)
         orginal_response.data["user"]["name"] = self.user.name
-        orginal_response.data["user"]["social_platform"] = social_platform_data
+        orginal_response.data["social_platform"] = social_platform_data
 
         return orginal_response
 
