@@ -11,34 +11,40 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ('foods', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Board',
+            name='SearchImage',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('content', models.TextField()),
                 ('photo', models.ImageField(blank=True, null=True, storage=config.storages.MediaStorage(), upload_to=core.utils.rename_imagefile_to_uuid)),
-                ('count', models.IntegerField(default=0)),
             ],
             options={
-                'ordering': ['-created'],
+                'abstract': False,
             },
         ),
         migrations.CreateModel(
-            name='Comment',
+            name='SearchResult',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('comment', models.CharField(max_length=255)),
-                ('board', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='boards.board')),
+                ('class_num', models.IntegerField()),
+                ('class_name', models.CharField(max_length=40)),
+                ('similarity', models.DecimalField(decimal_places=2, max_digits=5, null=True)),
+                ('x_cord', models.IntegerField()),
+                ('y_cord', models.IntegerField()),
+                ('width', models.IntegerField()),
+                ('height', models.IntegerField()),
+                ('food', models.ForeignKey(default=1, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='search', to='foods.food')),
+                ('photo', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='search', to='search.searchimage')),
             ],
             options={
-                'ordering': ['-modified'],
+                'abstract': False,
             },
         ),
     ]

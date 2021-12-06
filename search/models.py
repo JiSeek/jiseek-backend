@@ -41,8 +41,15 @@ class SearchResult(CoreModel):
     width = models.IntegerField()
     height = models.IntegerField()
     user = models.ForeignKey(
-        "users.User", on_delete=models.CASCADE, related_name="search"
+        "users.User", on_delete=models.CASCADE, related_name="search", null=True
     )
     photo = models.ForeignKey(
         SearchImage, on_delete=models.CASCADE, related_name="search"
+    )
+    food = models.ForeignKey(
+        "foods.Food",
+        on_delete=models.CASCADE,
+        related_name="search",
+        null=True,
+        default=1,
     )
