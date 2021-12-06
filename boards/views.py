@@ -48,6 +48,13 @@ class BoardView(RetrieveUpdateDestroyAPIView):
 class CommentsView(ListCreateAPIView):
     serializer_class = CommentSerializer
 
+    def get_permissions(self):
+        if self.request.method == "GET":
+            permission_classes = [IsAuthenticatedOrReadOnly]
+        else:
+            permission_classes = [IsSelfOrReadOnly]
+        return [permission() for permission in permission_classes]
+
     def get_queryset(self):
         pk = self.kwargs["pk"]
         comments = Comment.objects.filter(board__id=pk)
