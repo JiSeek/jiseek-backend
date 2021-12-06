@@ -160,7 +160,7 @@ AWS_S3_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_HOST = f"s3.{AWS_REGION}.amazonaws.com"
 AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_HOST}"
-
+AWS_DEFAULT_ACL = "public-read"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 if DEBUG:
