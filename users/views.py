@@ -202,9 +202,9 @@ class NaverLoginView(View):  # 네이버 로그인
         user = response.json()
 
         if User.objects.filter(
-            social_login_id=user["id"], social_platform="naver"
+            social_login_id=user["response"]["id"], social_platform="naver"
         ).exists():  # 기존에 소셜로그인을 했었는지 확인
-            user_info = User.objects.get(social_login_id=user["id"])
+            user_info = User.objects.get(social_login_id=user["response"]["id"])
             user_info.last_login = timezone.now()
             user_info.save()
             refresh_token, access_token = get_tokens_for_user(user_info)
@@ -225,10 +225,10 @@ class NaverLoginView(View):  # 네이버 로그인
             )
         else:
             new_user_info = User(
-                social_login_id=user["id"],
-                name=user["nickname"],
+                social_login_id=user["response"]["id"],
+                name=user["response"]["nickname"],
                 social_platform="naver",
-                email=user["email"],
+                email=user["response"]["email"],
                 last_login=timezone.now(),
             )
             new_user_info.save()
