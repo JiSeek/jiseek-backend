@@ -64,10 +64,11 @@ class CustomTokenRefreshSerializer(TokenRefreshSerializer):
 
 class UserInfoRetrieveSerializer(ModelSerializer):
     image = serializers.ImageField(source="profile.image", read_only=True)
+    social_platform = serializers.CharField(read_only=True)
 
     class Meta:
         model = User
-        fields = ["pk", "email", "name", "image"]
+        fields = ["pk", "email", "name", "image", "social_platform"]
 
 
 class UserInfoUpdateSerializer(ModelSerializer):
