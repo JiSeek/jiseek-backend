@@ -21,6 +21,7 @@ class SearchResultSerializer(ModelSerializer):
 
 class SearchImageSerializer(ModelSerializer):
     result = SerializerMethodField()
+    food = SerializerMethodField()
 
     def get_result(self, obj):
         photo_key = self.instance.photo
@@ -41,11 +42,18 @@ class SearchImageSerializer(ModelSerializer):
             )
 
         result_list = SearchResult.objects.filter(photo_id=obj.id)
-        print([res for res in result_list.values()])
 
         return [res for res in result_list.values()]
+
+    def get_food(self, obj):
+        result_list = SearchResult.objects.filter(photo_id=obj.id)
+        food_list = [res.get("food_id") for res in result_list.values()]
+        res = list()
+        for food_id in food_list:
+            res.extend(Food.objects.filter(pk=food_id).values())
+        return res
 
     class Meta:
         model = SearchImage
         fields = "__all__"
-        read_only_fields = ("id", "user", "result")
+        read_only_fields = ("id", "user", "result", "food")
