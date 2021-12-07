@@ -5,6 +5,12 @@ from users.serializers import UserInfoRetrieveSerializer
 
 
 class CommentSerializer(ModelSerializer):
+    username = SerializerMethodField()
+
+    def get_username(self, obj):
+        user = obj.user.name
+        return user
+
     class Meta:
         model = Comment
         fields = "__all__"

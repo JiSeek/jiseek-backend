@@ -7,6 +7,11 @@ from foods.serializers import FoodSerializer, FoodsSerializer
 
 
 class FoodViewSet(ReadOnlyModelViewSet):
+    """
+    음식 조회
+    ---
+    """
+
     queryset = Food.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
 
@@ -19,6 +24,10 @@ class FoodViewSet(ReadOnlyModelViewSet):
 
     @action(detail=False)
     def search(self, request):
+        """
+        음식 검색
+        ---
+        """
         name = request.GET.get("name", None)
         size = request.GET.get("size", None)
         kcal = request.GET.get("kcal", None)

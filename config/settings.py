@@ -52,6 +52,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "storages",
     "zappa_django_utils",
+    "drf_yasg",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
