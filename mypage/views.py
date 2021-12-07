@@ -17,6 +17,10 @@ User = get_user_model()
 
 
 class BoardFavsAPI(generics.ListAPIView):
+    """
+    게시글 좋아요 목록 조회
+    """
+
     serializer_class = BoardFavsSerializer
     authentication_classes = [
         JWTCookieAuthentication,
@@ -37,6 +41,10 @@ class BoardFavsAPI(generics.ListAPIView):
 
 
 class FoodFavsAPI(generics.ListAPIView):
+    """
+    음식 좋아요 목록 조회
+    """
+
     serializer_class = FoodFavsSerializer
     authentication_classes = [
         JWTCookieAuthentication,
@@ -59,6 +67,9 @@ class FoodFavsAPI(generics.ListAPIView):
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
 def like_board(request, pk):
+    """
+    게시글 좋아요 목록에 추가/삭제
+    """
     user_id = request.user.id
     user = User.objects.get(pk=user_id)
     profile = Profile.objects.get(user_id=user_id)
@@ -86,6 +97,9 @@ def like_board(request, pk):
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
 def like_food(request, pk):
+    """
+    음식 좋아요 목록에 추가/삭제
+    """
     user_id = request.user.id
     profile = Profile.objects.get(user_id=user_id)
     food = Food.objects.get(pk=pk)

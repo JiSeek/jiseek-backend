@@ -5,6 +5,10 @@ from .models import SearchImage, SearchResult
 
 
 class SearchImageView(CreateAPIView):
+    """
+    사진으로 음식 검색
+    """
+
     queryset = SearchImage.objects.all()
     serializer_class = SearchImageSerializer
     permission_classes = [IsAuthenticated]
@@ -14,6 +18,10 @@ class SearchImageView(CreateAPIView):
 
 
 class SearchResultView(ListAPIView):
+    """
+    사진으로 음식 검색 결과 조회(관리자용)
+    """
+
     permission_classes = [IsAdminUser]
     serializer_class = SearchResultSerializer
 
