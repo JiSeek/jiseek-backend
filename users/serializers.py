@@ -12,6 +12,7 @@ from rest_framework_simplejwt.settings import DEFAULTS
 from rest_framework_simplejwt.settings import IMPORT_STRINGS
 
 User = get_user_model()
+S3_BASE_URL = settings.S3_BASE_URL
 
 
 class CustomRegisterSerializer(RegisterSerializer):
@@ -70,6 +71,9 @@ class UserInfoRetrieveSerializer(ModelSerializer):
         model = User
         fields = ["pk", "email", "name", "image", "social_platform"]
 
+    def get_image(self, obj):
+        return S3_BASE_URL + obj.profile.image
+
 
 class UserInfoUpdateSerializer(ModelSerializer):
     email = serializers.EmailField(read_only=True)
@@ -79,6 +83,9 @@ class UserInfoUpdateSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ["pk", "email", "name", "image", "social_platform"]
+
+    def get_image(self, obj):
+        return S3_BASE_URL + obj.profile.image
 
     def update(self, instance, validated_data):
         profile_data = validated_data.pop("profile")
@@ -101,6 +108,9 @@ class UserInfoPartialUpdateSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ["pk", "email", "name", "image", "social_platform"]
+
+    def get_image(self, obj):
+        return S3_BASE_URL + obj.profile.image
 
     def update(self, instance, validated_data):
         try:
