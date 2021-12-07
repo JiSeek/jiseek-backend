@@ -18,12 +18,22 @@ class BoardPagination(PageNumberPagination):
 
 
 class BoardsRankView(ListAPIView):
+    """
+    좋아요 갯수를 기준으로 상위 9개의 글을 제공
+    -----
+    """
+
     queryset = Board.objects.order_by("-count")[:9]
     serializer_class = BoardSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class BoardsView(ListCreateAPIView):
+    """
+    게시글 전체 조회, 작성
+    -----
+    """
+
     queryset = Board.objects.all()
     serializer_class = BoardsSerializer
     pagination_class = BoardPagination
@@ -34,6 +44,11 @@ class BoardsView(ListCreateAPIView):
 
 
 class BoardView(RetrieveUpdateDestroyAPIView):
+    """
+    게시글 조회, 수정, 삭제
+    -----
+    """
+
     queryset = Board.objects.all()
     serializer_class = BoardSerializer
 
@@ -46,6 +61,11 @@ class BoardView(RetrieveUpdateDestroyAPIView):
 
 
 class CommentsView(ListCreateAPIView):
+    """
+    댓글 조회, 작성
+    -----
+    """
+
     serializer_class = CommentSerializer
 
     def get_permissions(self):
@@ -77,6 +97,11 @@ class CommentView(APIView):
             return None
 
     def get(self, request, board_pk, comment_pk):
+        """
+        댓글 조회, 수정, 삭제
+        -----
+        댓글 아이디를 기반으로 특정 댓글 조회
+        """
         comment = self.get_comment(board_pk, comment_pk)
         if comment:
             serializer = CommentSerializer(comment)
@@ -85,6 +110,11 @@ class CommentView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, board_pk, comment_pk):
+        """
+        댓글 조회, 수정, 삭제
+        -----
+        댓글 아이디를 기반으로 특정 댓글 수정
+        """
         comment = self.get_comment(board_pk, comment_pk)
 
         serializer = CommentSerializer(data=request.data, instance=comment)
@@ -95,6 +125,11 @@ class CommentView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def delete(self, request, board_pk, comment_pk):
+        """
+        댓글 조회, 수정, 삭제
+        -----
+        댓글 아이디를 기반으로 특정 댓글  삭제
+        """
         comment = self.get_comment(board_pk, comment_pk)
         comment.delete()
         return Response({"message": "Comment has been deleted!"})

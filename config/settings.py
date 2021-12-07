@@ -13,7 +13,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["127.0.0.1", "x2uxtymvof.execute-api.ap-northeast-2.amazonaws.com"]
 
@@ -52,6 +52,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "storages",
     "zappa_django_utils",
+    "drf_yasg",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
