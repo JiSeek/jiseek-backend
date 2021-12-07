@@ -120,7 +120,7 @@ class CommentView(APIView):
         serializer = CommentSerializer(data=request.data, instance=comment)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response({"message": "Comment has been updated!"})
+            return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
