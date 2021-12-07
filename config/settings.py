@@ -152,6 +152,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+S3_BASE_URL = "https://reviewkingwordcloud.s3.ap-northeast-2.amazonaws.com/media/"
+
 # AWS Setting
 AWS_REGION = env("AWS_REGION")
 AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")

@@ -25,7 +25,7 @@ from dj_rest_auth.utils import jwt_encode
 
 
 User = get_user_model()
-SECRET_KEY = "secret_key"
+S3_BASE_URL = settings.S3_BASE_URL
 
 
 def get_tokens_for_user(user):
@@ -56,7 +56,9 @@ class CustomLoginView(LoginView):
         }
         orginal_response.data.update(expires_at_data)
         orginal_response.data["user"]["name"] = self.user.name
-        orginal_response.data["user"]["image"] = str(self.user.profile.image)
+        orginal_response.data["user"]["image"] = S3_BASE_URL + str(
+            self.user.profile.image
+        )
         orginal_response.data["social_platform"] = self.user.social_platform
 
         return orginal_response
@@ -92,7 +94,7 @@ class GoogleLoginView(View):
                         "email": user_info.email,
                         "name": user_info.name,
                         "pk": user_info.id,
-                        "image": str(user_info.profile.image),
+                        "image": S3_BASE_URL + str(user_info.profile.image),
                         "social_platform": user_info.social_platform,
                     },
                     "expires_at": int(round(expires_at.timestamp())),
@@ -117,7 +119,7 @@ class GoogleLoginView(View):
                         "email": new_user_info.email,
                         "name": new_user_info.name,
                         "pk": new_user_info.id,
-                        "image": str(new_user_info.profile.image),
+                        "image": S3_BASE_URL + str(new_user_info.profile.image),
                         "social_platform": new_user_info.social_platform,
                     },
                     "expires_at": timezone.now()
@@ -157,7 +159,7 @@ class KakaoLoginView(View):  # 카카오 로그인
                         "email": user_info.email,
                         "name": user_info.name,
                         "pk": user_info.id,
-                        "image": str(user_info.profile.image),
+                        "image": S3_BASE_URL + str(user_info.profile.image),
                         "social_platform": user_info.social_platform,
                     },
                     "expires_at": int(round(expires_at.timestamp())),
@@ -184,7 +186,7 @@ class KakaoLoginView(View):  # 카카오 로그인
                         "email": new_user_info.email,
                         "name": new_user_info.name,
                         "pk": new_user_info.id,
-                        "image": str(new_user_info.profile.image),
+                        "image": S3_BASE_URL + str(new_user_info.profile.image),
                         "social_platform": new_user_info.social_platform,
                     },
                     "expires_at": timezone.now()
@@ -223,7 +225,7 @@ class NaverLoginView(View):  # 네이버 로그인
                         "email": user_info.email,
                         "name": user_info.name,
                         "pk": user_info.id,
-                        "image": str(user_info.profile.image),
+                        "image": S3_BASE_URL + str(user_info.profile.image),
                         "social_platform": user_info.social_platform,
                     },
                     "expires_at": timezone.now()
@@ -249,7 +251,7 @@ class NaverLoginView(View):  # 네이버 로그인
                         "email": new_user_info.email,
                         "name": new_user_info.name,
                         "pk": new_user_info.id,
-                        "image": str(new_user_info.profile.image),
+                        "image": S3_BASE_URL + str(new_user_info.profile.image),
                         "social_platform": new_user_info.social_platform,
                     },
                     "expires_at": timezone.now()
@@ -308,7 +310,7 @@ class CustomVerifyEmailView(VerifyEmailView):
                 "user": {
                     "email": self.user.email,
                     "name": self.user.name,
-                    "image": str(user.profile.image),
+                    "image": S3_BASE_URL + str(self.user.profile.image),
                     "pk": self.user.id,
                 },
                 "expires_at": timezone.now()
