@@ -16,7 +16,6 @@ class Profile(models.Model):
         storage=MediaStorage(),
         upload_to=rename_imagefile_to_uuid,
         editable=True,
-        default="bibimbap.png",
         null=True,
     )
     board_favs = models.ManyToManyField(
@@ -30,12 +29,10 @@ class Profile(models.Model):
         return f"{self.user.id}_profile"
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # saving image first
         if self.image:
             img = Image.open(self.image)  # Open image using self
-            img.load()
-
             if img.height > 300 or img.width > 300:
                 new_img = (300, 300)
                 img.thumbnail(new_img)
                 img.save(self.image)  # saving image at the same path
-        super().save(*args, **kwargs)  # saving image first
