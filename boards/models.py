@@ -39,7 +39,7 @@ class Board(CoreModel):
 
 
 class Comment(CoreModel):
-    comment = models.CharField(max_length=255)
+    content = models.CharField(max_length=255)
     board = models.ForeignKey(
         "Board", related_name="comments", on_delete=models.CASCADE
     )

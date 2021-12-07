@@ -54,12 +54,10 @@ class CustomLoginView(LoginView):
         expires_at_data = {
             "expires_at": int(round(expires_at.timestamp())),
         }
-        social_platform_data = {
-            "social_platform": self.user.social_platform,
-        }
         orginal_response.data.update(expires_at_data)
         orginal_response.data["user"]["name"] = self.user.name
-        orginal_response.data["social_platform"] = social_platform_data
+        orginal_response.data["user"]["image"] = self.user.profile.image
+        orginal_response.data["social_platform"] = self.user.social_platform
 
         return orginal_response
 
@@ -72,8 +70,10 @@ class GoogleLoginView(View):
         response = requests.get(url + access_token)  # 구글에 id_token을 보내 디코딩 요청
         user = response.json()  # 유저의 정보를 json화해서 변수에 저장
 
-        # user['sub']은 user의 고유 번호
-        if User.objects.filter(
+        if User.objects.filter(email=user["email"]).exits():
+            return JsonResponse({"detail": "The email already exits"}, status=400)
+
+        elif User.objects.filter(
             social_login_id=user["sub"], social_platform="kakao"
         ).exists():  # 기존에 가입했었는지 확인
             user_info = User.objects.get(social_login_id=user["sub"])  # 가입된 데이터를 변수에 저장
@@ -92,6 +92,7 @@ class GoogleLoginView(View):
                         "email": user_info.email,
                         "name": user_info.name,
                         "pk": user_info.id,
+                        "image": user_info.profile.image,
                         "social_platform": user_info.social_platform,
                     },
                     "expires_at": int(round(expires_at.timestamp())),
@@ -116,6 +117,7 @@ class GoogleLoginView(View):
                         "email": new_user_info.email,
                         "name": new_user_info.name,
                         "pk": new_user_info.id,
+                        "image": new_user_info.profile.image,
                         "social_platform": new_user_info.social_platform,
                     },
                     "expires_at": timezone.now()
@@ -155,6 +157,7 @@ class KakaoLoginView(View):  # 카카오 로그인
                         "email": user_info.email,
                         "name": user_info.name,
                         "pk": user_info.id,
+                        "image": user_info.profile.image,
                         "social_platform": user_info.social_platform,
                     },
                     "expires_at": int(round(expires_at.timestamp())),
@@ -181,6 +184,7 @@ class KakaoLoginView(View):  # 카카오 로그인
                         "email": new_user_info.email,
                         "name": new_user_info.name,
                         "pk": new_user_info.id,
+                        "image": new_user_info.profile.image,
                         "social_platform": new_user_info.social_platform,
                     },
                     "expires_at": timezone.now()
@@ -201,10 +205,13 @@ class NaverLoginView(View):  # 네이버 로그인
         )  # API를 요청하여 회원의 정보를 response에 저장
         user = response.json()
 
-        if User.objects.filter(
-            social_login_id=user["id"], social_platform="naver"
+        if User.objects.filter(email=user["response"]["email"]).exits():
+            return JsonResponse({"detail": "The email already exits"}, status=400)
+
+        elif User.objects.filter(
+            social_login_id=user["response"]["id"], social_platform="naver"
         ).exists():  # 기존에 소셜로그인을 했었는지 확인
-            user_info = User.objects.get(social_login_id=user["id"])
+            user_info = User.objects.get(social_login_id=user["response"]["id"])
             user_info.last_login = timezone.now()
             user_info.save()
             refresh_token, access_token = get_tokens_for_user(user_info)
@@ -216,6 +223,7 @@ class NaverLoginView(View):  # 네이버 로그인
                         "email": user_info.email,
                         "name": user_info.name,
                         "pk": user_info.id,
+                        "image": user_info.profile.image,
                         "social_platform": user_info.social_platform,
                     },
                     "expires_at": timezone.now()
@@ -225,10 +233,10 @@ class NaverLoginView(View):  # 네이버 로그인
             )
         else:
             new_user_info = User(
-                social_login_id=user["id"],
-                name=user["nickname"],
+                social_login_id=user["response"]["id"],
+                name=user["response"]["nickname"],
                 social_platform="naver",
-                email=user["email"],
+                email=user["response"]["email"],
                 last_login=timezone.now(),
             )
             new_user_info.save()
@@ -241,6 +249,7 @@ class NaverLoginView(View):  # 네이버 로그인
                         "email": new_user_info.email,
                         "name": new_user_info.name,
                         "pk": new_user_info.id,
+                        "image": new_user_info.profile.image,
                         "social_platform": new_user_info.social_platform,
                     },
                     "expires_at": timezone.now()
