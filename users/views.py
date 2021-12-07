@@ -201,7 +201,10 @@ class NaverLoginView(View):  # 네이버 로그인
         )  # API를 요청하여 회원의 정보를 response에 저장
         user = response.json()
 
-        if User.objects.filter(
+        if User.objects.filter(email=user["response"]["email"]).exits():
+            return JsonResponse({"detail": "The email already exits"}, status=400)
+
+        elif User.objects.filter(
             social_login_id=user["response"]["id"], social_platform="naver"
         ).exists():  # 기존에 소셜로그인을 했었는지 확인
             user_info = User.objects.get(social_login_id=user["response"]["id"])
