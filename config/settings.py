@@ -253,11 +253,11 @@ if DEBUG:
 else:
     CORS_ALLOWED_ORIGINS = [
         # 허용할 Origin 추가
-        "http://team2-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
+        "http://elice-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
         "http://localhost:3000",
     ]
     CORS_ORIGIN_WHITELIST = [
         "http://localhost:8000",
-        "http://team2-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
+        "http://elice-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
         "http://localhost:3000",
     ]
