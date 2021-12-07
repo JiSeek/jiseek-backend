@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = "Add food nutrient data to database"
 
     def handle(self, *args, **options):
-        with open("data/food_nutrient_img.csv") as file:
+        with open("data/food_nutrient_image.csv") as file:
             reader = csv.DictReader(file, delimiter="|")
             for r in reader:
                 Food.objects.create(
