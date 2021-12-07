@@ -33,6 +33,7 @@ class Profile(models.Model):
         if self.image:
             img = Image.open(self.image)  # Open image using self
             file_type = img.format
+            img.load()
             if img.height > 300 or img.width > 300:
                 new_img = (300, 300)
                 img.thumbnail(new_img)
