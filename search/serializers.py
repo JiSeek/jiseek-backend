@@ -2,7 +2,7 @@ from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from .models import SearchImage, SearchResult
 from foods.models import Food
 from django.conf import settings
-from darknet.result import get_result
+import requests
 
 
 class SearchResultSerializer(ModelSerializer):
@@ -26,8 +26,12 @@ class SearchImageSerializer(ModelSerializer):
     def get_result(self, obj):
         photo_key = self.instance.photo
         photo = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}{settings.MEDIA_URL}{str(photo_key)}"
-        photo_data = get_result(photo)
-        for data in photo_data:
+        photo_data = requests.post(
+            url="http://elice-kdt-2nd-team2.koreacentral.cloudapp.azure.com:5000",
+            json={"url": f"{photo}"},
+        )
+        print(photo_data.json())
+        for data in photo_data.json():
             SearchResult.objects.create(
                 class_num=data[0],
                 class_name=data[1],
@@ -38,7 +42,7 @@ class SearchImageSerializer(ModelSerializer):
                 height=data[6],
                 user=self.instance.user,
                 photo=SearchImage.objects.get(photo=photo_key),
-                food=Food.objects.get(pk=data[0]),
+                food=Food.objects.get(pk=data[0] + 1),
             )
 
         result_list = SearchResult.objects.filter(photo_id=obj.id)
