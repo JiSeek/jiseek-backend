@@ -25,7 +25,7 @@ from dj_rest_auth.utils import jwt_encode
 
 
 User = get_user_model()
-SECRET_KEY = "secret_key"
+S3_BASE_URL = settings.S3_BASE_URL
 
 
 def get_tokens_for_user(user):
@@ -54,12 +54,15 @@ class CustomLoginView(LoginView):
         expires_at_data = {
             "expires_at": int(round(expires_at.timestamp())),
         }
-        social_platform_data = {
-            "social_platform": self.user.social_platform,
-        }
         orginal_response.data.update(expires_at_data)
         orginal_response.data["user"]["name"] = self.user.name
-        orginal_response.data["social_platform"] = social_platform_data
+        if self.user.profile.image:
+            orginal_response.data["user"]["image"] = S3_BASE_URL + str(
+                self.user.profile.image
+            )
+        else:
+            orginal_response.data["user"]["image"] = None
+        orginal_response.data["social_platform"] = self.user.social_platform
 
         return orginal_response
 
@@ -69,54 +72,66 @@ class GoogleLoginView(View):
         data = json.loads(request.body)
         access_token = data.get("key", None)
         url = "https://oauth2.googleapis.com/tokeninfo?id_token="  # 토큰을 이용해서 회원의 정보를 확인하기 위한 google api주소
-        response = requests.get(url + token)  # 구글에 id_token을 보내 디코딩 요청
+        response = requests.get(url + access_token)  # 구글에 id_token을 보내 디코딩 요청
         user = response.json()  # 유저의 정보를 json화해서 변수에 저장
 
-        # user['sub']은 user의 고유 번호
-        if User.objects.filter(
+        if User.objects.filter(email=user["email"]).exists():
+            return JsonResponse({"detail": "The email already exits"}, status=400)
+
+        elif User.objects.filter(
             social_login_id=user["sub"], social_platform="kakao"
         ).exists():  # 기존에 가입했었는지 확인
-            user_info = User.objects.get(social_login_id=user["sub"])  # 가입된 데이터를 변수에 저장
-            user_info.last_login = timezone.now()
-            user_info.save()
-            refresh_token, access_token = get_tokens_for_user(user_info)
+            user = User.objects.get(social_login_id=user["sub"])  # 가입된 데이터를 변수에 저장
+            user.last_login = timezone.now()
+            user.save()
+            refresh_token, access_token = get_tokens_for_user(user)
             expires_at = (
                 timezone.now()
                 + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"]
             )
+            if self.user.profile.image:
+                image = S3_BASE_URL + str(self.user.profile.image)
+            else:
+                image = None
             return JsonResponse(
                 {  # jwt토큰, 이름, 타입 프론트엔드에 전달
                     "access_token": access_token,
                     "refresh_token": refresh_token,
                     "user": {
-                        "email": user_info.email,
-                        "name": user_info.name,
-                        "pk": user_info.id,
-                        "social_platform": user_info.social_platform,
+                        "email": user.email,
+                        "name": user.name,
+                        "pk": user.id,
+                        "image": image,
+                        "social_platform": user.social_platform,
                     },
                     "expires_at": int(round(expires_at.timestamp())),
                 },
                 status=200,
             )
         else:
-            new_user_info = User(  # 처음으로 소셜로그인을 했을 경우 회원 정보를 저장(email이 없을 수도 있다 하여, 있으면 저장하고, 없으면 None으로 표기)
+            user = User(  # 처음으로 소셜로그인을 했을 경우 회원 정보를 저장(email이 없을 수도 있다 하여, 있으면 저장하고, 없으면 None으로 표기)
                 social_login_id=user["sub"],
                 name=user["name"],
                 social_platform="google",
                 email=user.get("email", None),
                 last_login=timezone.now(),
             )
-            new_user_info.save()  # DB에 저장
-            refresh_token, access_token = get_tokens_for_user(new_user_info)
+            user.save()  # DB에 저장
+            refresh_token, access_token = get_tokens_for_user(user)
+            if self.user.profile.image:
+                image = S3_BASE_URL + str(self.user.profile.image)
+            else:
+                image = None
             return JsonResponse(
                 {  # jwt토큰, 이름, 타입 프론트엔드에 전달
                     "access_token": access_token,
                     "refresh_token": refresh_token,
                     "user": {
-                        "email": new_user_info.email,
-                        "name": new_user_info.name,
-                        "pk": new_user_info.id,
-                        "social_platform": new_user_info.social_platform,
+                        "email": user.email,
+                        "name": user.name,
+                        "pk": user.id,
+                        "image": image,
+                        "social_platform": user.social_platform,
                     },
                     "expires_at": timezone.now()
                     + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
@@ -139,49 +154,58 @@ class KakaoLoginView(View):  # 카카오 로그인
         if User.objects.filter(
             social_login_id=user["id"], social_platform="kakao"
         ).exists():  # 기존에 소셜로그인을 했었는지 확인
-            user_info = User.objects.get(social_login_id=user["id"])
-            user_info.last_login = timezone.now()
-            user_info.save()
-            refresh_token, access_token = get_tokens_for_user(user_info)
+            user = User.objects.get(social_login_id=user["id"])
+            user.last_login = timezone.now()
+            user.save()
+            refresh_token, access_token = get_tokens_for_user(user)
             expires_at = (
                 timezone.now()
                 + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"]
             )
+            if self.user.profile.image:
+                image = S3_BASE_URL + str(self.user.profile.image)
+            else:
+                image = None
             return JsonResponse(
                 {  # jwt토큰, 이름, 타입 프론트엔드에 전달
                     "access_token": access_token,
                     "refresh_token": refresh_token,
                     "user": {
-                        "email": user_info.email,
-                        "name": user_info.name,
-                        "pk": user_info.id,
-                        "social_platform": user_info.social_platform,
+                        "email": user.email,
+                        "name": user.name,
+                        "pk": user.id,
+                        "image": image,
+                        "social_platform": user.social_platform,
                     },
                     "expires_at": int(round(expires_at.timestamp())),
                 },
                 status=200,
             )
         else:
-            new_user_info = User(
+            user = User(
                 social_login_id=user["id"],
                 name=user["properties"]["nickname"],  # kakao는 닉네임만 전달됨
                 social_platform="kakao",
                 email=user["properties"].get("email", None),
                 last_login=timezone.now(),
             )
-            new_user_info.save()
+            user.save()
 
-            access_token, refresh_token = get_tokens_for_user(new_user_info)
-            refresh_token, access_token = get_tokens_for_user(new_user_info)
+            refresh_token, access_token = get_tokens_for_user(user)
+            if self.user.profile.image:
+                image = S3_BASE_URL + str(self.user.profile.image)
+            else:
+                image = None
             return JsonResponse(
                 {  # jwt토큰, 이름, 타입 프론트엔드에 전달
                     "access_token": access_token,
                     "refresh_token": refresh_token,
                     "user": {
-                        "email": new_user_info.email,
-                        "name": new_user_info.name,
-                        "pk": new_user_info.id,
-                        "social_platform": new_user_info.social_platform,
+                        "email": user.email,
+                        "name": user.name,
+                        "pk": user.id,
+                        "image": image,
+                        "social_platform": user.social_platform,
                     },
                     "expires_at": timezone.now()
                     + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
@@ -201,22 +225,30 @@ class NaverLoginView(View):  # 네이버 로그인
         )  # API를 요청하여 회원의 정보를 response에 저장
         user = response.json()
 
-        if User.objects.filter(
+        if User.objects.filter(email=user["response"]["email"]).exists():
+            return JsonResponse({"detail": "The email already exits"}, status=400)
+
+        elif User.objects.filter(
             social_login_id=user["response"]["id"], social_platform="naver"
         ).exists():  # 기존에 소셜로그인을 했었는지 확인
-            user_info = User.objects.get(social_login_id=user["response"]["id"])
-            user_info.last_login = timezone.now()
-            user_info.save()
-            refresh_token, access_token = get_tokens_for_user(user_info)
+            user = User.objects.get(social_login_id=user["response"]["id"])
+            user.last_login = timezone.now()
+            user.save()
+            refresh_token, access_token = get_tokens_for_user(user)
+            if self.user.profile.image:
+                image = S3_BASE_URL + str(self.user.profile.image)
+            else:
+                image = None
             return JsonResponse(
                 {  # jwt토큰, 이름, 타입 프론트엔드에 전달
                     "access_token": access_token,
                     "refresh_token": refresh_token,
                     "user": {
-                        "email": user_info.email,
-                        "name": user_info.name,
-                        "pk": user_info.id,
-                        "social_platform": user_info.social_platform,
+                        "email": user.email,
+                        "name": user.name,
+                        "pk": user.id,
+                        "image": image,
+                        "social_platform": user.social_platform,
                     },
                     "expires_at": timezone.now()
                     + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
@@ -224,24 +256,29 @@ class NaverLoginView(View):  # 네이버 로그인
                 status=200,
             )
         else:
-            new_user_info = User(
+            user = User(
                 social_login_id=user["response"]["id"],
                 name=user["response"]["nickname"],
                 social_platform="naver",
                 email=user["response"]["email"],
                 last_login=timezone.now(),
             )
-            new_user_info.save()
-            refresh_token, access_token = get_tokens_for_user(new_user_info)
+            user.save()
+            refresh_token, access_token = get_tokens_for_user(user)
+            if self.user.profile.image:
+                image = S3_BASE_URL + str(self.user.profile.image)
+            else:
+                image = None
             return JsonResponse(
                 {  # jwt토큰, 이름, 타입 프론트엔드에 전달
                     "access_token": access_token,
                     "refresh_token": refresh_token,
                     "user": {
-                        "email": new_user_info.email,
-                        "name": new_user_info.name,
-                        "pk": new_user_info.id,
-                        "social_platform": new_user_info.social_platform,
+                        "email": user.email,
+                        "name": user.name,
+                        "pk": user.id,
+                        "image": image,
+                        "social_platform": user.social_platform,
                     },
                     "expires_at": timezone.now()
                     + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
@@ -292,6 +329,10 @@ class CustomVerifyEmailView(VerifyEmailView):
         self.user = confirmation.email_address.user
         self.user.last_login = timezone.now()
         access_token, refresh_token = jwt_encode(self.user)
+        if self.user.profile.image:
+            image = S3_BASE_URL + str(self.user.profile.image)
+        else:
+            image = None
         return JsonResponse(
             {  # jwt토큰, 이름, 타입 프론트엔드에 전달
                 "access_token": str(access_token),
@@ -299,6 +340,7 @@ class CustomVerifyEmailView(VerifyEmailView):
                 "user": {
                     "email": self.user.email,
                     "name": self.user.name,
+                    "image": image,
                     "pk": self.user.id,
                 },
                 "expires_at": timezone.now()

@@ -153,6 +153,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+S3_BASE_URL = "https://reviewkingwordcloud.s3.ap-northeast-2.amazonaws.com/media/"
+
 # AWS Setting
 AWS_REGION = env("AWS_REGION")
 AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
@@ -254,11 +256,13 @@ if DEBUG:
 else:
     CORS_ALLOWED_ORIGINS = [
         # 허용할 Origin 추가
-        "http://team2-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
+        "http://elice-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
         "http://localhost:3000",
+        "https://getpostman.com",
     ]
     CORS_ORIGIN_WHITELIST = [
         "http://localhost:8000",
-        "http://team2-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
+        "http://elice-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
         "http://localhost:3000",
+        "https://getpostman.com",
     ]

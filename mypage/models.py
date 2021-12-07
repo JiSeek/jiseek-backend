@@ -4,6 +4,7 @@ from django.db import models
 from core.utils import rename_imagefile_to_uuid
 from config.storages import MediaStorage
 from PIL import Image
+import os
 
 User = get_user_model()
 
@@ -16,7 +17,6 @@ class Profile(models.Model):
         storage=MediaStorage(),
         upload_to=rename_imagefile_to_uuid,
         editable=True,
-        blank=True,
         null=True,
     )
     board_favs = models.ManyToManyField(
@@ -30,11 +30,11 @@ class Profile(models.Model):
         return f"{self.user.id}_profile"
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # saving image first
         if self.image:
             img = Image.open(self.image)  # Open image using self
-
+            img = img.convert("RGB")
+            img.load()
             if img.height > 300 or img.width > 300:
-                new_img = (300, 300)
-                img.thumbnail(new_img)
-                img.save(self.image)  # saving image at the same path
-        super().save(*args, **kwargs)  # saving image first
+                img.thumbnail((300, 300))
+                img.save(self.image, "JPEG")  # saving image at the same path
