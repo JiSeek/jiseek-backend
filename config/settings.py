@@ -13,7 +13,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["127.0.0.1", "x2uxtymvof.execute-api.ap-northeast-2.amazonaws.com"]
 
@@ -51,6 +51,7 @@ THIRD_PARTY_APPS = [
     "django_extensions",
     "corsheaders",
     "storages",
+    "zappa_django_utils",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
@@ -61,7 +62,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
+    # "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -160,7 +161,7 @@ AWS_S3_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_HOST = f"s3.{AWS_REGION}.amazonaws.com"
 AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_HOST}"
-
+AWS_DEFAULT_ACL = "public-read"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 if DEBUG:
@@ -252,13 +253,11 @@ if DEBUG:
 else:
     CORS_ALLOWED_ORIGINS = [
         # 허용할 Origin 추가
-        "https://x2uxtymvof.execute-api.ap-northeast-2.amazonaws.com/",
         "http://team2-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
         "http://localhost:3000",
     ]
     CORS_ORIGIN_WHITELIST = [
         "http://localhost:8000",
-        "https://x2uxtymvof.execute-api.ap-northeast-2.amazonaws.com/",
         "http://team2-kdt-2nd-team2.koreacentral.cloudapp.azure.com",
         "http://localhost:3000",
     ]

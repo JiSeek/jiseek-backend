@@ -12,12 +12,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
 from rest_framework.exceptions import MethodNotAllowed
-import requests
+import requests, json
 from datetime import timedelta
 from .serializers import (
     CustomTokenRefreshSerializer,
     UserInfoRetrieveSerializer,
     UserInfoUpdateSerializer,
+    UserInfoPartialUpdateSerializer,
 )
 from dj_rest_auth.registration.serializers import VerifyEmailSerializer
 from dj_rest_auth.utils import jwt_encode
@@ -50,22 +51,23 @@ class CustomLoginView(LoginView):
     def get_response(self):
         orginal_response = super().get_response()
         expires_at = timezone.now() + timedelta(hours=2)
-        added_data = {
+        expires_at_data = {
             "expires_at": int(round(expires_at.timestamp())),
+        }
+        social_platform_data = {
             "social_platform": self.user.social_platform,
         }
-        orginal_response.data.update(added_data)
+        orginal_response.data.update(expires_at_data)
         orginal_response.data["user"]["name"] = self.user.name
+        orginal_response.data["social_platform"] = social_platform_data
+
         return orginal_response
 
 
 class GoogleLoginView(View):
-    # 소셜로그인을 하면 User테이블에 아이디와 패스워드를 담아두고
-
-    def get(self, request):  # id_token만 이용해 헤더로 받기
-        token = request.headers[
-            "Authorization"
-        ]  # 프론트엔드에서 HTTP로 들어온 헤더에서 id_token(Authorization)을 변수에 저장
+    def post(self, request):  # id_token만 key 값으로 받기
+        data = json.loads(request.body)
+        access_token = data.get("key", None)
         url = "https://oauth2.googleapis.com/tokeninfo?id_token="  # 토큰을 이용해서 회원의 정보를 확인하기 위한 google api주소
         response = requests.get(url + token)  # 구글에 id_token을 보내 디코딩 요청
         user = response.json()  # 유저의 정보를 json화해서 변수에 저장
@@ -90,8 +92,8 @@ class GoogleLoginView(View):
                         "email": user_info.email,
                         "name": user_info.name,
                         "pk": user_info.id,
+                        "social_platform": user_info.social_platform,
                     },
-                    "social_platform": user_info.social_platform,
                     "expires_at": int(round(expires_at.timestamp())),
                 },
                 status=200,
@@ -114,8 +116,8 @@ class GoogleLoginView(View):
                         "email": new_user_info.email,
                         "name": new_user_info.name,
                         "pk": new_user_info.id,
+                        "social_platform": new_user_info.social_platform,
                     },
-                    "social_platform": new_user_info.social_platform,
                     "expires_at": timezone.now()
                     + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
                 },
@@ -124,11 +126,10 @@ class GoogleLoginView(View):
 
 
 class KakaoLoginView(View):  # 카카오 로그인
-    def get(self, request):  # 프론트로부터 전달받은 access_token으로 사용자 정보 가져오기
-        access_token = request.headers["Authorization"]
-        headers = {
-            "Authorization": f"{access_token}",
-        }
+    def post(self, request):  # 프론트로부터 전달받은 access_token으로 사용자 정보 가져오기
+        data = json.loads(request.body)
+        access_token = data.get("key", None)
+        headers = {"Authorization": f"Bearer {access_token}"}
         url = "https://kapi.kakao.com/v2/user/me"  # Authorization(프론트에서 받은 토큰)을 이용해서 회원의 정보를 확인하기 위한 카카오 API 주소
         response = requests.request(
             "GET", url, headers=headers
@@ -154,8 +155,8 @@ class KakaoLoginView(View):  # 카카오 로그인
                         "email": user_info.email,
                         "name": user_info.name,
                         "pk": user_info.id,
+                        "social_platform": user_info.social_platform,
                     },
-                    "social_platform": user_info.social_platform,
                     "expires_at": int(round(expires_at.timestamp())),
                 },
                 status=200,
@@ -180,8 +181,8 @@ class KakaoLoginView(View):  # 카카오 로그인
                         "email": new_user_info.email,
                         "name": new_user_info.name,
                         "pk": new_user_info.id,
+                        "social_platform": new_user_info.social_platform,
                     },
-                    "social_platform": new_user_info.social_platform,
                     "expires_at": timezone.now()
                     + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
                 },
@@ -190,8 +191,9 @@ class KakaoLoginView(View):  # 카카오 로그인
 
 
 class NaverLoginView(View):  # 네이버 로그인
-    def get(self, request):
-        access_token = request.headers["Authorization"]
+    def post(self, request):
+        data = json.loads(request.body)
+        access_token = data.get("key", None)
         headers = {"Authorization": f"Bearer {access_token}"}
         url = "https://openapi.naver.com/v1/nid/me"  # Authorization(프론트에서 받은 토큰)을 이용해서 회원의 정보를 확인하기 위한 네이버 API 주소
         response = requests.request(
@@ -200,9 +202,9 @@ class NaverLoginView(View):  # 네이버 로그인
         user = response.json()
 
         if User.objects.filter(
-            social_login_id=user["id"], social_platform="naver"
+            social_login_id=user["response"]["id"], social_platform="naver"
         ).exists():  # 기존에 소셜로그인을 했었는지 확인
-            user_info = User.objects.get(social_login_id=user["id"])
+            user_info = User.objects.get(social_login_id=user["response"]["id"])
             user_info.last_login = timezone.now()
             user_info.save()
             refresh_token, access_token = get_tokens_for_user(user_info)
@@ -214,8 +216,8 @@ class NaverLoginView(View):  # 네이버 로그인
                         "email": user_info.email,
                         "name": user_info.name,
                         "pk": user_info.id,
+                        "social_platform": user_info.social_platform,
                     },
-                    "social_platform": user_info.social_platform,
                     "expires_at": timezone.now()
                     + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
                 },
@@ -223,10 +225,10 @@ class NaverLoginView(View):  # 네이버 로그인
             )
         else:
             new_user_info = User(
-                social_login_id=user["id"],
-                name=user["nickname"],
+                social_login_id=user["response"]["id"],
+                name=user["response"]["nickname"],
                 social_platform="naver",
-                email=user["email"],
+                email=user["response"]["email"],
                 last_login=timezone.now(),
             )
             new_user_info.save()
@@ -239,8 +241,8 @@ class NaverLoginView(View):  # 네이버 로그인
                         "email": new_user_info.email,
                         "name": new_user_info.name,
                         "pk": new_user_info.id,
+                        "social_platform": new_user_info.social_platform,
                     },
-                    "social_platform": new_user_info.social_platform,
                     "expires_at": timezone.now()
                     + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
                 },
@@ -263,8 +265,10 @@ class UserInfoView(generics.RetrieveUpdateAPIView):
 
     def get_serializer_class(self):
         serializer_class = self.serializer_class
-        if self.request.method == "PUT" or self.request.method == "PATCH":
+        if self.request.method == "PUT":
             serializer_class = UserInfoUpdateSerializer
+        elif self.request.method == "PATCH":
+            serializer_class = UserInfoPartialUpdateSerializer
         return serializer_class
 
 
