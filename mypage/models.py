@@ -4,6 +4,7 @@ from django.db import models
 from core.utils import rename_imagefile_to_uuid
 from config.storages import MediaStorage
 from PIL import Image
+import os
 
 User = get_user_model()
 
@@ -32,9 +33,8 @@ class Profile(models.Model):
         super().save(*args, **kwargs)  # saving image first
         if self.image:
             img = Image.open(self.image)  # Open image using self
-            file_type = img.format
+            img = img.convert("RGB")
             img.load()
             if img.height > 300 or img.width > 300:
-                new_img = (300, 300)
-                img.thumbnail(new_img)
-                img.save(self.image, format=file_type)  # saving image at the same path
+                img.thumbnail((300, 300))
+                img.save(self.image, "JPEG")  # saving image at the same path
