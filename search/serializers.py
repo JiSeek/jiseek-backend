@@ -30,7 +30,6 @@ class SearchImageSerializer(ModelSerializer):
             url="http://elice-kdt-2nd-team2.koreacentral.cloudapp.azure.com:5000",
             json={"url": f"{photo}"},
         )
-        print(photo_data.json())
         for data in photo_data.json():
             SearchResult.objects.create(
                 class_num=data[0],
@@ -42,7 +41,7 @@ class SearchImageSerializer(ModelSerializer):
                 height=data[6],
                 user=self.instance.user,
                 photo=SearchImage.objects.get(photo=photo_key),
-                food=Food.objects.get(pk=data[0] + 1),
+                food=Food.objects.get(pk=data[0] + settings.SECRET_NUM),
             )
 
         result_list = SearchResult.objects.filter(photo_id=obj.id)
