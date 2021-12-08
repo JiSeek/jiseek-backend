@@ -5,6 +5,7 @@ from core.utils import rename_imagefile_to_uuid
 from config.storages import MediaStorage
 from PIL import Image
 import os
+import random
 
 User = get_user_model()
 
@@ -16,6 +17,7 @@ class Profile(models.Model):
     image = models.ImageField(
         storage=MediaStorage(),
         upload_to=rename_imagefile_to_uuid,
+        default=f"media/default/{random.randint(1, 7)}.png",
         editable=True,
         null=True,
     )
