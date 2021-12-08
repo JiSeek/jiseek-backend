@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "36e79633c5d735a3b76e0cf24f0ed51763ae73cf44401309e62cc8464fbb16cb"
+            "sha256": "940a0fefd919c3c10773881f6f4d7a86ba18946acd792f77a060a59794fb2015"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -253,6 +253,13 @@
             "index": "pypi",
             "version": "==3.1.5"
         },
+        "django-seed": {
+            "hashes": [
+                "sha256:93e65d2c10449c464b83e9031be02763ec10e786aa064d649c4dd5ad06fa0eea"
+            ],
+            "index": "pypi",
+            "version": "==0.3.1"
+        },
         "django-storages": {
             "hashes": [
                 "sha256:204a99f218b747c46edbfeeb1310d357f83f90fa6a6024d8d0a3f422570cee84",
@@ -291,6 +298,14 @@
             ],
             "index": "pypi",
             "version": "==0.5"
+        },
+        "faker": {
+            "hashes": [
+                "sha256:3163c84866cf118ac5329a802e046b0f729528ce62ebb2806b626e0badbb6ff3",
+                "sha256:530690ad12a2a054071af95fc8a354c5fd57b5e7707053a9662f40f14a87b68e"
+            ],
+            "markers": "python_version >= '3.6'",
+            "version": "==10.0.0"
         },
         "future": {
             "hashes": [
@@ -762,6 +777,13 @@
             ],
             "index": "pypi",
             "version": "==1.2.2"
+        },
+        "toposort": {
+            "hashes": [
+                "sha256:8ed8e109e96ae30bf66da2d2155e4eb9989d9c5c743c837e37d9774a4eddd804",
+                "sha256:ddc2182c42912a440511bd7ff5d3e6a1cabc3accbc674a3258c8c41cbfbb2125"
+            ],
+            "version": "==1.7"
         },
         "tqdm": {
             "hashes": [
