@@ -228,7 +228,7 @@ EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True  # 유저가 받은 링크를 클릭하면 회원가입 완료되게끔
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "지식(Jiseek) 이메일 인증: "  # 이메일에 자동으로 표시되는 사이트 정보
-URL_FRONT = "http://team2-kdt-2nd-team2.koreacentral.cloudapp.azure.com/"
+URL_FRONT = "http://elice-kdt-2nd-team2.koreacentral.cloudapp.azure.com/"
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
