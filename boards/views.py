@@ -132,4 +132,4 @@ class CommentView(APIView):
         """
         comment = self.get_comment(board_pk, comment_pk)
         comment.delete()
-        return JsonResponse({"message": "Comment has been deleted!"})
+        return JsonResponse(status=status.HTTP_204_NO_CONTENT)
