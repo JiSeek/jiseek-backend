@@ -352,8 +352,8 @@ class CustomVerifyEmailView(VerifyEmailView):
                     "email": self.user.email,
                     "name": self.user.name,
                     "image": image,
-                    "is_korean": user.is_korean,
-                    "social_platform": user.social_platform,
+                    "is_korean": self.user.is_korean,
+                    "social_platform": self.user.social_platform,
                 },
                 "expires_at": timezone.now()
                 + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
