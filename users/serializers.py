@@ -69,7 +69,7 @@ class UserInfoRetrieveSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["pk", "email", "name", "image", "social_platform"]
+        fields = ["pk", "email", "name", "image", "social_platform", "is_korean"]
 
     def get_image(self, obj):
         return S3_BASE_URL + obj.profile.image
@@ -82,7 +82,7 @@ class UserInfoUpdateSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["pk", "email", "name", "image", "social_platform"]
+        fields = ["pk", "email", "name", "image", "social_platform", "is_korean"]
 
     def get_image(self, obj):
         return S3_BASE_URL + obj.profile.image
@@ -107,7 +107,7 @@ class UserInfoPartialUpdateSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["pk", "email", "name", "image", "social_platform"]
+        fields = ["pk", "email", "name", "image", "social_platform", "is_korean"]
 
     def get_image(self, obj):
         return S3_BASE_URL + obj.profile.image

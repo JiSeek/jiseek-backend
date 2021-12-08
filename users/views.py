@@ -56,6 +56,7 @@ class CustomLoginView(LoginView):
         }
         orginal_response.data.update(expires_at_data)
         orginal_response.data["user"]["name"] = self.user.name
+        orginal_response.data["user"]["is_korean"] = self.user.is_korean
         if self.user.profile.image:
             orginal_response.data["user"]["image"] = S3_BASE_URL + str(
                 self.user.profile.image
@@ -98,10 +99,11 @@ class GoogleLoginView(View):
                     "access_token": access_token,
                     "refresh_token": refresh_token,
                     "user": {
+                        "pk": user.id,
                         "email": user.email,
                         "name": user.name,
-                        "pk": user.id,
                         "image": image,
+                        "is_korean": user.is_korean,
                         "social_platform": user.social_platform,
                     },
                     "expires_at": int(round(expires_at.timestamp())),
@@ -115,6 +117,7 @@ class GoogleLoginView(View):
                 social_platform="google",
                 email=user.get("email", None),
                 last_login=timezone.now(),
+                is_korean=True,
             )
             user.save()  # DB에 저장
             refresh_token, access_token = get_tokens_for_user(user)
@@ -127,10 +130,11 @@ class GoogleLoginView(View):
                     "access_token": access_token,
                     "refresh_token": refresh_token,
                     "user": {
+                        "pk": user.id,
                         "email": user.email,
                         "name": user.name,
-                        "pk": user.id,
                         "image": image,
+                        "is_korean": user.is_korean,
                         "social_platform": user.social_platform,
                     },
                     "expires_at": timezone.now()
@@ -171,10 +175,11 @@ class KakaoLoginView(View):  # 카카오 로그인
                     "access_token": access_token,
                     "refresh_token": refresh_token,
                     "user": {
+                        "pk": user.id,
                         "email": user.email,
                         "name": user.name,
-                        "pk": user.id,
                         "image": image,
+                        "is_korean": user.is_korean,
                         "social_platform": user.social_platform,
                     },
                     "expires_at": int(round(expires_at.timestamp())),
@@ -188,6 +193,7 @@ class KakaoLoginView(View):  # 카카오 로그인
                 social_platform="kakao",
                 email=user["properties"].get("email", None),
                 last_login=timezone.now(),
+                is_korean=True,
             )
             user.save()
 
@@ -201,10 +207,11 @@ class KakaoLoginView(View):  # 카카오 로그인
                     "access_token": access_token,
                     "refresh_token": refresh_token,
                     "user": {
+                        "pk": user.id,
                         "email": user.email,
                         "name": user.name,
-                        "pk": user.id,
                         "image": image,
+                        "is_korean": user.is_korean,
                         "social_platform": user.social_platform,
                     },
                     "expires_at": timezone.now()
@@ -244,10 +251,11 @@ class NaverLoginView(View):  # 네이버 로그인
                     "access_token": access_token,
                     "refresh_token": refresh_token,
                     "user": {
+                        "pk": user.id,
                         "email": user.email,
                         "name": user.name,
-                        "pk": user.id,
                         "image": image,
+                        "is_korean": user.is_korean,
                         "social_platform": user.social_platform,
                     },
                     "expires_at": timezone.now()
@@ -262,6 +270,7 @@ class NaverLoginView(View):  # 네이버 로그인
                 social_platform="naver",
                 email=user["response"]["email"],
                 last_login=timezone.now(),
+                is_korean=True,
             )
             user.save()
             refresh_token, access_token = get_tokens_for_user(user)
@@ -274,10 +283,11 @@ class NaverLoginView(View):  # 네이버 로그인
                     "access_token": access_token,
                     "refresh_token": refresh_token,
                     "user": {
+                        "pk": user.id,
                         "email": user.email,
                         "name": user.name,
-                        "pk": user.id,
                         "image": image,
+                        "is_korean": user.is_korean,
                         "social_platform": user.social_platform,
                     },
                     "expires_at": timezone.now()
@@ -338,10 +348,12 @@ class CustomVerifyEmailView(VerifyEmailView):
                 "access_token": str(access_token),
                 "refresh_token": str(refresh_token),
                 "user": {
+                    "pk": self.user.id,
                     "email": self.user.email,
                     "name": self.user.name,
                     "image": image,
-                    "pk": self.user.id,
+                    "is_korean": self.user.is_korean,
+                    "social_platform": self.user.social_platform,
                 },
                 "expires_at": timezone.now()
                 + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"],
