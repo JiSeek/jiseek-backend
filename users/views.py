@@ -89,8 +89,8 @@ class GoogleLoginView(View):
                 timezone.now()
                 + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"]
             )
-            if self.user.profile.image:
-                image = S3_BASE_URL + str(self.user.profile.image)
+            if user.profile.image:
+                image = S3_BASE_URL + str(user.profile.image)
             else:
                 image = None
             return JsonResponse(
@@ -118,8 +118,8 @@ class GoogleLoginView(View):
             )
             user.save()  # DB에 저장
             refresh_token, access_token = get_tokens_for_user(user)
-            if self.user.profile.image:
-                image = S3_BASE_URL + str(self.user.profile.image)
+            if user.profile.image:
+                image = S3_BASE_URL + str(user.profile.image)
             else:
                 image = None
             return JsonResponse(
@@ -162,8 +162,8 @@ class KakaoLoginView(View):  # 카카오 로그인
                 timezone.now()
                 + getattr(settings, "SIMPLE_JWT", None)["ACCESS_TOKEN_LIFETIME"]
             )
-            if self.user.profile.image:
-                image = S3_BASE_URL + str(self.user.profile.image)
+            if user.profile.image:
+                image = S3_BASE_URL + str(user.profile.image)
             else:
                 image = None
             return JsonResponse(
@@ -192,8 +192,8 @@ class KakaoLoginView(View):  # 카카오 로그인
             user.save()
 
             refresh_token, access_token = get_tokens_for_user(user)
-            if self.user.profile.image:
-                image = S3_BASE_URL + str(self.user.profile.image)
+            if user.profile.image:
+                image = S3_BASE_URL + str(user.profile.image)
             else:
                 image = None
             return JsonResponse(
@@ -235,8 +235,8 @@ class NaverLoginView(View):  # 네이버 로그인
             user.last_login = timezone.now()
             user.save()
             refresh_token, access_token = get_tokens_for_user(user)
-            if self.user.profile.image:
-                image = S3_BASE_URL + str(self.user.profile.image)
+            if user.profile.image:
+                image = S3_BASE_URL + str(user.profile.image)
             else:
                 image = None
             return JsonResponse(
@@ -265,8 +265,8 @@ class NaverLoginView(View):  # 네이버 로그인
             )
             user.save()
             refresh_token, access_token = get_tokens_for_user(user)
-            if self.user.profile.image:
-                image = S3_BASE_URL + str(self.user.profile.image)
+            if user.profile.image:
+                image = S3_BASE_URL + str(user.profile.image)
             else:
                 image = None
             return JsonResponse(

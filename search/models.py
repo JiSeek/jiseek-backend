@@ -21,14 +21,14 @@ class SearchImage(CoreModel):
         return f"{self.user.id}_searchphoto"
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # saving image first
         if self.photo:
-            img = Image.open(self.photo)
+            img = Image.open(self.photo)  # Open image using self
+            img = img.convert("RGB")
+            img.load()
             if img.height > 800 or img.width > 800:
-                new_img = (800, 800)
-                img.thumbnail(new_img)
-                img.save(self.photo)
-
-        super().save(*args, **kwargs)
+                img.thumbnail((800, 800))
+                img.save(self.photo, "JPEG")  # saving image at the same path
 
 
 class SearchResult(CoreModel):
