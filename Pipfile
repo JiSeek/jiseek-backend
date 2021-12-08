@@ -61,6 +61,7 @@ Werkzeug = "==2.0.2"
 "backports.zoneinfo" = "*"
 zappa-django-utils = "*"
 drf-yasg = "*"
+django-seed = "*"
 
 [dev-packages]
 flake8 = "*"
