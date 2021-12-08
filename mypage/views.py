@@ -5,10 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from dj_rest_auth.jwt_auth import JWTCookieAuthentication  # will be removed
-from .serializers import (
-    BoardFavsSerializer,
-    FoodFavsSerializer,
-)
+from .serializers import BoardFavsSerializer, FoodFavsSerializer, MyBoardsSerializer
 from .models import Profile
 from boards.models import Board
 from foods.models import Food
@@ -62,6 +59,22 @@ class FoodFavsAPI(generics.ListAPIView):
         food_ids = [liked_food.id for liked_food in liked_foods]
 
         return Food.objects.filter(id__in=food_ids).all()
+
+
+class MyBoardsAPI(generics.ListAPIView):
+    """
+    내가 쓴 게시물 목록 조회
+    """
+
+    serializer_class = MyBoardsSerializer
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def get_queryset(self):
+        user = self.request.user
+        boards = Board.objects.filter(user=user).all()
+        return boards
 
 
 @api_view(["PUT"])
