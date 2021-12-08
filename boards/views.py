@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import (
     ListAPIView,
@@ -6,7 +7,6 @@ from rest_framework.generics import (
 )
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework import status
 from boards.models import Board, Comment
 from .serializers import BoardSerializer, BoardsSerializer, CommentSerializer
@@ -105,9 +105,9 @@ class CommentView(APIView):
         comment = self.get_comment(board_pk, comment_pk)
         if comment:
             serializer = CommentSerializer(comment)
-            return Response(serializer.data)
+            return JsonResponse(serializer.data)
         else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return JsonResponse(status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, board_pk, comment_pk):
         """
@@ -120,9 +120,9 @@ class CommentView(APIView):
         serializer = CommentSerializer(data=request.data, instance=comment)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response(serializer.data)
+            return JsonResponse(serializer.data)
         else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return JsonResponse(status=status.HTTP_404_NOT_FOUND)
 
     def delete(self, request, board_pk, comment_pk):
         """
@@ -132,4 +132,4 @@ class CommentView(APIView):
         """
         comment = self.get_comment(board_pk, comment_pk)
         comment.delete()
-        return Response({"message": "Comment has been deleted!"})
+        return JsonResponse({"message": "Comment has been deleted!"})
