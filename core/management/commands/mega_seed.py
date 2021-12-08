@@ -1,5 +1,7 @@
+import random
 from django.core.management.base import BaseCommand
 from users.models import User
+from mypage.models import Profile
 from django_seed import Seed
 
 
@@ -22,3 +24,10 @@ class Command(BaseCommand):
         )
         user_seed.execute()
         self.stdout.write(self.style.SUCCESS("Users seeded"))
+
+        profiles = Profile.objects.all()
+
+        for profile in profiles[50:]:
+            profile.image = f"media/default/{random.randint(1,7)}.png"
+            profile.save()
+        self.stdout.write(self.style.SUCCESS("Profile seeded"))
