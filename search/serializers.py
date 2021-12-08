@@ -25,7 +25,7 @@ class SearchImageSerializer(ModelSerializer):
 
     def get_result(self, obj):
         photo_key = self.instance.photo
-        photo = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}{settings.MEDIA_URL}{str(photo_key)}"
+        photo = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}/media/{str(photo_key)}"
         photo_data = requests.post(
             url="http://elice-kdt-2nd-team2.koreacentral.cloudapp.azure.com:5000",
             json={"url": f"{photo}"},
