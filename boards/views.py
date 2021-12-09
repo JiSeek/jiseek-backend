@@ -8,6 +8,7 @@ from rest_framework.generics import (
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.response import Response
 from boards.models import Board, Comment
 from .serializers import BoardSerializer, BoardsSerializer, CommentSerializer
 from .permissions import IsSelfOrReadOnly
@@ -114,7 +115,7 @@ class CommentView(APIView):
         comment = self.get_comment(board_pk, comment_pk)
         if comment:
             serializer = CommentSerializer(comment)
-            return JsonResponse(serializer.data)
+            return Response(serializer.data)
         else:
             return JsonResponse(status=status.HTTP_404_NOT_FOUND)
 
@@ -141,4 +142,4 @@ class CommentView(APIView):
         """
         comment = self.get_comment(board_pk, comment_pk)
         comment.delete()
-        return JsonResponse({"message": "Comment has been deleted!"})
+        return Response({"message": "Comment has been deleted!"})

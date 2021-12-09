@@ -1,3 +1,5 @@
+import json
+import requests
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.views import View
@@ -12,7 +14,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
 from rest_framework.exceptions import MethodNotAllowed
-import requests, json
 from datetime import timedelta
 from .serializers import (
     CustomTokenRefreshSerializer,
