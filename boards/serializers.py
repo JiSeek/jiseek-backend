@@ -15,6 +15,7 @@ class CommentSerializer(ModelSerializer):
         model = Comment
         fields = "__all__"
         read_only_fields = ("id", "created", "modified", "board", "user")
+        order_by = ["-created"]
 
 
 class BoardsSerializer(ModelSerializer):
@@ -32,6 +33,7 @@ class BoardsSerializer(ModelSerializer):
             "like_users",
             "count",
         )
+        order_by = ["-created"]
 
 
 class BoardSerializer(ModelSerializer):
