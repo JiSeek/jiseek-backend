@@ -154,8 +154,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-S3_BASE_URL = "https://reviewkingwordcloud.s3.ap-northeast-2.amazonaws.com/media/"
-
 # AWS Setting
 AWS_REGION = env("AWS_REGION")
 AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
@@ -166,6 +164,8 @@ AWS_QUERYSTRING_AUTH = False
 AWS_S3_HOST = f"s3.{AWS_REGION}.amazonaws.com"
 AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_HOST}"
 AWS_DEFAULT_ACL = "public-read"
+
+S3_BASE_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 if DEBUG:
