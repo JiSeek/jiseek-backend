@@ -26,8 +26,8 @@ class SearchImage(CoreModel):
             img = Image.open(self.photo)  # Open image using self
             img = img.convert("RGB")
             img.load()
-            if img.height > 800 or img.width > 800:
-                img.thumbnail((800, 800))
+            if img.height > 1200 or img.width > 1200:
+                img.thumbnail((1200, 1200))
                 img.save(self.photo, "JPEG")  # saving image at the same path
 
 
