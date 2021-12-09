@@ -1,10 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-
 from core.utils import rename_imagefile_to_uuid
 from config.storages import MediaStorage
 from PIL import Image
-import os
 
 User = get_user_model()
 
