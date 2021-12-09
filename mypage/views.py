@@ -19,9 +19,6 @@ class BoardFavsAPI(generics.ListAPIView):
     """
 
     serializer_class = BoardFavsSerializer
-    authentication_classes = [
-        JWTCookieAuthentication,
-    ]
     permission_classes = [
         IsAuthenticated,
     ]
@@ -43,9 +40,6 @@ class FoodFavsAPI(generics.ListAPIView):
     """
 
     serializer_class = FoodFavsSerializer
-    authentication_classes = [
-        JWTCookieAuthentication,
-    ]
     permission_classes = [
         IsAuthenticated,
     ]
