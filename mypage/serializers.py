@@ -13,9 +13,11 @@ class BoardFavsSerializer(serializers.ModelSerializer):
 
 
 class FoodFavsSerializer(serializers.ModelSerializer):
+    image = serializers.CharField(source="image1")
+
     class Meta:
         model = Food
-        fields = ["pk", "name"]
+        fields = ["pk", "name", "image"]
 
 
 class MyBoardsSerializer(serializers.ModelSerializer):
