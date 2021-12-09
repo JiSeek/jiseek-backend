@@ -26,11 +26,10 @@ class BoardFavsAPI(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         profile_id = Profile.objects.get(user=user).id
-        liked_boards = Profile.board_favs.through.objects.filter(
+        board_favs = Profile.board_favs.through.objects.filter(
             profile_id=profile_id
         ).all()
-        board_ids = [liked_board.id for liked_board in liked_boards]
-
+        board_ids = [board_fav.board_id for board_fav in board_favs]
         return Board.objects.filter(id__in=board_ids).all()
 
 
@@ -47,11 +46,10 @@ class FoodFavsAPI(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         profile_id = Profile.objects.get(user=user).id
-        liked_foods = Profile.food_favs.through.objects.filter(
+        food_favs = Profile.food_favs.through.objects.filter(
             profile_id=profile_id
         ).all()
-        food_ids = [liked_food.id for liked_food in liked_foods]
-
+        food_ids = [food_fav.food_id for food_fav in food_favs]
         return Food.objects.filter(id__in=food_ids).all()
 
 
