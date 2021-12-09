@@ -9,7 +9,7 @@ User = get_user_model()
 class BoardFavsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
-        fields = ["pk", "content", "created"]
+        fields = ["pk", "content", "photo", "created"]
 
 
 class FoodFavsSerializer(serializers.ModelSerializer):
