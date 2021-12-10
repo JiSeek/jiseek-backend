@@ -48,4 +48,4 @@ class Comment(CoreModel):
     )
 
     class Meta:
-        ordering = ["-modified"]
+        ordering = ["-created"]
