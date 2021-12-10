@@ -33,7 +33,6 @@ class BoardsSerializer(ModelSerializer):
             "like_users",
             "count",
         )
-        order_by = ["-created"]
 
 
 class BoardSerializer(ModelSerializer):
