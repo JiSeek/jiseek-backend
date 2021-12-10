@@ -87,7 +87,7 @@ class CommentsView(ListCreateAPIView):
 
     def get_queryset(self):
         pk = self.kwargs["pk"]
-        comments = Comment.objects.filter(board__id=pk)
+        comments = Comment.objects.filter(board__id=pk).order_by("-created")
         return comments
 
     def perform_create(self, serializer):
