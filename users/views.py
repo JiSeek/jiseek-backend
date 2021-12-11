@@ -77,11 +77,11 @@ class GoogleLoginView(View):
         response = requests.get(url + access_token)  # 구글에 id_token을 보내 디코딩 요청
         user = response.json()  # 유저의 정보를 json화해서 변수에 저장
 
-        if User.objects.filter(email=user["email"]).exists():
-            return JsonResponse({"detail": "The email already exits"}, status=400)
+        if User.objects.filter(email=user["email"], social_platform=None).exists():
+            return JsonResponse({"detail": "The email already exists"}, status=400)
 
         elif User.objects.filter(
-            social_login_id=user["sub"], social_platform="kakao"
+            social_login_id=user["sub"], social_platform="google"
         ).exists():  # 기존에 가입했었는지 확인
             user = User.objects.get(social_login_id=user["sub"])  # 가입된 데이터를 변수에 저장
             user.last_login = timezone.now()
@@ -233,8 +233,10 @@ class NaverLoginView(View):  # 네이버 로그인
         )  # API를 요청하여 회원의 정보를 response에 저장
         user = response.json()
 
-        if User.objects.filter(email=user["response"]["email"]).exists():
-            return JsonResponse({"detail": "The email already exits"}, status=400)
+        if User.objects.filter(
+            email=user["response"]["email"], social_platform=None
+        ).exists():
+            return JsonResponse({"detail": "The email already exists"}, status=400)
 
         elif User.objects.filter(
             social_login_id=user["response"]["id"], social_platform="naver"
