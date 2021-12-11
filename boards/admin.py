@@ -1,6 +1,20 @@
 from django.contrib import admin
 from .models import Board, Comment
 
-# Register your models here.
-admin.site.register(Board)
-admin.site.register(Comment)
+
+@admin.register(Board)
+class CustomBoardAdmin(admin.ModelAdmin):
+
+    """Custom Board Admin"""
+
+    list_display = ("id", "user", "content")
+    list_filter = ("user",)
+
+
+@admin.register(Comment)
+class CustomCommentAdmin(admin.ModelAdmin):
+
+    """Custom Comment Admin"""
+
+    list_display = ("id", "user", "content")
+    list_filter = ("user",)
