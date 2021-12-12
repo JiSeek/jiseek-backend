@@ -43,19 +43,18 @@
 ## 3. 프로젝트 기능 설명
 
   - 프론트엔드와 통신 가능한 REST API 개발
-  - 프로젝트만의 차별점, 기대 효과
 
 <br />
 
 ## 4. 프로젝트 구성도
   - 전체
-  ![img1](https://reviewkingwordcloud.s3.ap-northeast-2.amazonaws.com/media/docs/jiseek_BE_Workflow.003.jpeg)
+  ![img1](https://reviewkingwordcloud.s3.ap-northeast-2.amazonaws.com/docs/jiseek_BE_Workflow.003.jpeg)
   - ERD
-  ![img2](https://reviewkingwordcloud.s3.ap-northeast-2.amazonaws.com/media/docs/jiseek_BE_Workflow.004.png)
+  ![img2](https://reviewkingwordcloud.s3.ap-northeast-2.amazonaws.com/docs/jiseek_BE_Workflow.004.png)
   - Infra
-  ![img3](https://reviewkingwordcloud.s3.ap-northeast-2.amazonaws.com/media/docs/jiseek_BE_Workflow.001.jpeg)
+  ![img3](https://reviewkingwordcloud.s3.ap-northeast-2.amazonaws.com/docs/jiseek_BE_Workflow.001.jpeg)
   - Login
-  ![img4](https://reviewkingwordcloud.s3.ap-northeast-2.amazonaws.com/media/docs/jiseek_BE_Workflow.002.jpeg)
+  ![img4](https://reviewkingwordcloud.s3.ap-northeast-2.amazonaws.com/docs/jiseek_BE_Workflow.002.jpeg)
 
 <br />
 
