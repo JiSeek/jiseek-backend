@@ -24,7 +24,7 @@ class BoardsRankView(ListAPIView):
     -----
     """
 
-    queryset = Board.objects.order_by("-count")[:9]
+    queryset = Board.objects.order_by("-count")[:7]
     serializer_class = BoardSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
